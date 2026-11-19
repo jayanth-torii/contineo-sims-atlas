@@ -3,7 +3,9 @@
 import json, io, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = sys.argv[1] if len(sys.argv) > 1 else ROOT
+args = [a for a in sys.argv[1:] if a != "--local"]
+LOCAL = "--local" in sys.argv          # build the copy that sits beside the PDFs
+OUT = args[0] if args else ROOT
 D = json.load(io.open(os.path.join(ROOT, "features.json"), encoding="utf-8"))
 os.makedirs(OUT, exist_ok=True)
 
@@ -179,10 +181,13 @@ select{background:var(--surface);border:1px solid var(--line);border-radius:2px;
 .pill{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
   border:1px solid var(--line);padding:2px 6px;white-space:nowrap}
 .pill.k{background:var(--solid);color:var(--on-solid);border-color:var(--solid)}
+.acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
 .dl-btn{display:inline-flex;align-items:center;gap:7px;background:var(--solid);color:var(--on-solid);border:0;
   padding:8px 12px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;
-  text-transform:uppercase;text-decoration:none;margin-top:auto;align-self:flex-start}
-.dl-btn.off{background:none;color:var(--ink-3);border:1px dashed var(--line-2);cursor:default}
+  text-transform:uppercase;text-decoration:none;align-self:flex-start}
+.dl-btn:hover{opacity:.84}
+.dl-btn.ghost{background:none;color:var(--ink-2);border:1px solid var(--line-2)}
+.dl-btn.ghost:hover{border-color:var(--solid);color:var(--ink);opacity:1}
 
 /* overlaps */
 .ovl{border:1px solid var(--line);border-bottom:0;min-width:0}
@@ -274,7 +279,7 @@ footer a{color:var(--ink-2)}
 </section>
 
 <section id="v-manuals" role="tabpanel" aria-labelledby="t-manuals" hidden>
-  <div class="bar"><p class="hint">Nineteen manuals &middot; 387 pages &middot; every step folded into the capabilities above</p></div>
+  <div class="bar"><p class="hint" id="manhint">Nineteen manuals &middot; 387 pages &middot; every step folded into the capabilities above</p></div>
   <div class="cols">
     <div class="mans" id="mans"></div>
     <aside class="panel" id="panel3" aria-live="polite"></aside>
@@ -308,6 +313,7 @@ footer a{color:var(--ink-2)}
 
 <script>
 const D = __DATA__;
+const LOCAL = __LOCAL__;   /* true only in the copy that sits in the same folder as the PDFs */
 const LOGINS = ["DC","FAC","HOD","SPOC","CNS","SP","IQAC"];
 const LNAME = {DC:"Department Coordinator",FAC:"Faculty / Staff",HOD:"HOD",SPOC:"SPOC",
                CNS:"Counsellor",SP:"Student / Parent portal",IQAC:"IQAC Head"};
@@ -445,6 +451,9 @@ function wire(el){
 }
 
 /* ── manuals ───────────────────────── */
+document.getElementById("manhint").innerHTML = LOCAL
+  ? "Nineteen manuals · 387 pages · <strong>Open the PDF</strong> works because this copy sits in the same folder as the files"
+  : "Nineteen manuals · 387 pages · the PDFs are Contineo's and are not served here — every step they describe is in the capabilities";
 function renderMans(){
   document.getElementById("mans").innerHTML = M.map(m => `
     <div class="man">
@@ -456,7 +465,12 @@ function renderMans(){
         ${m.conf ? `<span class="pill">Vendor confidential</span>` : ""}
       </div>
       <p>${esc(m.sum)}</p>
-      <button class="dl-btn" data-man="${m.id}">Open \u2192</button>
+      <div class="acts">
+        ${LOCAL ? `<a class="dl-btn" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+          Open the PDF</a>` : ""}
+        <button class="dl-btn ghost" data-man="${m.id}">What it covers \u2192</button>
+      </div>
     </div>`).join("");
   document.querySelectorAll("#mans [data-man]").forEach(b => b.onclick = () => {
     state.selMan = b.dataset.man; renderManPanel();
@@ -481,6 +495,12 @@ function renderManPanel(){
         ? "Carries a Contineo confidentiality notice \u2014 not republished"
         : "No confidentiality notice found, still not republished"}</dd></div>
     </dl>
+    ${LOCAL ? `<a class="dl-btn" style="margin-top:14px" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+      Open the PDF</a>`
+    : `<div class="flag" style="margin-top:14px">The PDF is not served from this site. Open your own copy of
+       <strong>${esc(m.file)}</strong>, or use the offline build of this page, which sits in the same folder as
+       the manuals and opens them directly.</div>`}
     <div class="mref"><h3>Capabilities it documents <em></em></h3>
       <div class="rel">${m.covers.filter(i => byid[i]).map(i =>
         `<button data-id="${i}">${esc(byid[i].name)}</button>`).join("")}</div></div>
@@ -550,5 +570,6 @@ renderGrid(); renderPanel(); renderMans(); renderManPanel();
 </html>
 """
 
-io.open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(HTML.replace("__DATA__", DATA))
+io.open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(
+    HTML.replace("__DATA__", DATA).replace("__LOCAL__", "true" if LOCAL else "false"))
 print("site written:", os.path.join(OUT, "index.html"), len(HTML) + len(DATA), "bytes")
