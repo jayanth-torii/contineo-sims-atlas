@@ -1,557 +1,569 @@
 <!doctype html>
-<html lang="en" data-theme="auto">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Contineo SIMS Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Every function in the Contineo SIMS student ERP, the login it lives in, and what you can do there.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%230a0a0a'/><rect x='3' y='3' width='4' height='4' fill='%23fff'/><rect x='9' y='3' width='4' height='4' fill='%23fff'/><rect x='3' y='9' width='4' height='4' fill='%23fff'/><rect x='9' y='9' width='4' height='4' fill='%23888'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%230b0b0a'/><rect x='3' y='3.5' width='10' height='1.6' fill='%23fff'/><rect x='3' y='7.2' width='10' height='1.6' fill='%23fff'/><rect x='3' y='10.9' width='6' height='1.6' fill='%238a8a86'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
 <style>
+/* Layout: a scannable index of 154 capabilities on the left, one always-populated
+   reading pane on the right. Monochrome, warm-biased neutrals. Three type roles:
+   sans for the interface, serif for prose, mono for data and short labels. */
 :root{
-  --bg:#ffffff; --surface:#f6f6f5; --raised:#ffffff;
-  --ink:#0a0a0a; --ink-2:#3a3a39; --ink-3:#6e6e6c; --ink-4:#9b9b98;
-  --line:#dededa; --line-2:#c2c2bd; --solid:#0a0a0a; --on-solid:#ffffff;
-  --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.07);
-  --f-sans:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --paper:#ffffff; --sunk:#f5f5f3; --raise:#ffffff; --ink:#0b0b0a; --ink-2:#383835;
+  --ink-3:#6b6b66; --ink-4:#9a9a94; --rule:#e2e2dd; --rule-2:#c6c6c0;
+  --mark:#0b0b0a; --on-mark:#ffffff;
+  --f-ui:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --f-read:"IBM Plex Serif",ui-serif,Georgia,serif;
+  --f-data:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --bg:#0a0a0a; --surface:#151514; --raised:#121211;
-  --ink:#f6f6f4; --ink-2:#cfcfca; --ink-3:#9b9b96; --ink-4:#6e6e6a;
-  --line:#2a2a28; --line-2:#3d3d3a; --solid:#f6f6f4; --on-solid:#0a0a0a;
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.6);
-  color-scheme:dark; } }
-/* an explicit light choice must beat the media query, whatever the OS says */
-html[data-theme="light"]{
-  --bg:#ffffff; --surface:#f6f6f5; --raised:#ffffff;
-  --ink:#0a0a0a; --ink-2:#3a3a39; --ink-3:#6e6e6c; --ink-4:#9b9b98;
-  --line:#dededa; --line-2:#c2c2bd; --solid:#0a0a0a; --on-solid:#ffffff;
-  --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.07);
-  color-scheme:light; }
-html[data-theme="dark"]{
-  --bg:#0a0a0a; --surface:#151514; --raised:#121211;
-  --ink:#f6f6f4; --ink-2:#cfcfca; --ink-3:#9b9b96; --ink-4:#6e6e6a;
-  --line:#2a2a28; --line-2:#3d3d3a; --solid:#f6f6f4; --on-solid:#0a0a0a;
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.6);
-  color-scheme:dark; }
+  --paper:#0b0b0a; --sunk:#151513; --raise:#111110; --ink:#f5f5f2; --ink-2:#cbcbc5;
+  --ink-3:#95958f; --ink-4:#6a6a65; --rule:#272725; --rule-2:#3b3b38;
+  --mark:#f5f5f2; --on-mark:#0b0b0a; color-scheme:dark; } }
+:root[data-theme="light"]{
+  --paper:#ffffff; --sunk:#f5f5f3; --raise:#ffffff; --ink:#0b0b0a; --ink-2:#383835;
+  --ink-3:#6b6b66; --ink-4:#9a9a94; --rule:#e2e2dd; --rule-2:#c6c6c0;
+  --mark:#0b0b0a; --on-mark:#ffffff; color-scheme:light; }
+:root[data-theme="dark"]{
+  --paper:#0b0b0a; --sunk:#151513; --raise:#111110; --ink:#f5f5f2; --ink-2:#cbcbc5;
+  --ink-3:#95958f; --ink-4:#6a6a65; --rule:#272725; --rule-2:#3b3b38;
+  --mark:#f5f5f2; --on-mark:#0b0b0a; color-scheme:dark; }
 
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:15px;line-height:1.5;
-  -webkit-font-smoothing:antialiased}
-.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  max-width:1360px;margin:0 auto}
-button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--solid);outline-offset:2px}
-img{max-width:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1380px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;background:none;border:0}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+.lbl{font-family:var(--f-data);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
 
-/* masthead */
-header{border-bottom:1px solid var(--line);padding-block:28px 20px}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-3)}
-h1{font-size:clamp(27px,5vw,42px);line-height:1.04;letter-spacing:-.025em;margin:12px 0 0;font-weight:600;
-  text-wrap:balance;max-width:17ch}
-.tagline{color:var(--ink-2);margin:12px 0 0;max-width:64ch}
-.theme{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;flex:none}
-.theme button{background:var(--bg);border:0;border-right:1px solid var(--line);padding:7px 9px;cursor:pointer;
-  display:grid;place-items:center;color:var(--ink-3)}
+/* ── masthead ───────────────────────────────────────── */
+header{padding-block:30px 0}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+.brand{max-width:40ch}
+h1{font-size:clamp(26px,4.2vw,37px);line-height:1.06;letter-spacing:-.028em;margin:9px 0 0;font-weight:600;
+  text-wrap:balance}
+.sub{font-family:var(--f-read);font-size:15px;line-height:1.55;color:var(--ink-2);margin:11px 0 0;max-width:58ch}
+.theme{display:flex;border:1px solid var(--rule);flex:none}
+.theme button{border-right:1px solid var(--rule);padding:7px 9px;cursor:pointer;display:grid;place-items:center;
+  color:var(--ink-3)}
 .theme button:last-child{border-right:0}
-.theme button[aria-pressed="true"]{background:var(--solid);color:var(--on-solid)}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:1px;background:var(--line);
-  border:1px solid var(--line);margin-top:24px}
-.stat{background:var(--bg);padding:12px 13px}
-.stat b{display:block;font-size:25px;line-height:1;letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums}
-.stat span{display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-3);margin-top:7px;line-height:1.35}
+.theme button[aria-pressed="true"]{background:var(--mark);color:var(--on-mark)}
+.theme button:hover:not([aria-pressed="true"]){color:var(--ink)}
 
-/* tabs */
-.tabs{display:flex;border-bottom:1px solid var(--line);margin-top:24px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{background:none;border:0;border-bottom:2px solid transparent;padding:11px 2px;margin-right:26px;cursor:pointer;
-  font-weight:500;color:var(--ink-3);white-space:nowrap}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--solid)}
-.tab small{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-4);margin-left:6px}
+.figs{display:flex;flex-wrap:wrap;gap:0;margin-top:26px;border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--rule)}
+.fig{padding:13px 26px 13px 0;margin-right:26px;border-right:1px solid var(--rule)}
+.fig:last-child{border-right:0;margin-right:0;padding-right:0}
+.fig b{display:block;font-size:27px;line-height:1;letter-spacing:-.035em;font-weight:600;
+  font-variant-numeric:tabular-nums}
+.fig span{display:block;margin-top:6px}
 
-/* toolbar */
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:16px}
-.search{flex:1 1 220px;min-width:0;position:relative}
-.search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:2px;
-  padding:9px 11px 9px 32px;color:var(--ink);font-size:14px;font-family:inherit}
-.search input::placeholder{color:var(--ink-4)}
-.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);stroke:var(--ink-4);fill:none;stroke-width:2.2}
-.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;flex-wrap:wrap}
-.seg button{background:var(--bg);border:0;border-right:1px solid var(--line);padding:9px 12px;cursor:pointer;
-  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-3)}
-.seg button:last-child{border-right:0}
-.seg button[aria-pressed="true"]{background:var(--solid);color:var(--on-solid)}
-select{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:9px 10px;color:var(--ink);
-  font-size:13.5px;max-width:100%;font-family:inherit}
-.count{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
-.reset{background:none;border:1px solid var(--line);border-radius:2px;padding:9px 12px;cursor:pointer;
-  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
-.reset:hover{border-color:var(--line-2);color:var(--ink)}
+/* ── tabs ───────────────────────────────────────────── */
+nav.tabs{display:flex;gap:28px;border-bottom:1px solid var(--rule);margin-top:0;overflow-x:auto;
+  scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 0 12px;cursor:pointer;color:var(--ink-3);font-weight:500;white-space:nowrap;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--mark)}
+.tab b{font-family:var(--f-data);font-size:11px;font-weight:500;color:var(--ink-4);margin-left:7px;
+  font-variant-numeric:tabular-nums}
 
-.cols{display:grid;grid-template-columns:1fr 372px;gap:22px;align-items:start;padding-bottom:56px}
-@media (max-width:980px){ .cols{grid-template-columns:1fr} }
+/* ── toolbar ────────────────────────────────────────── */
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-block:14px;
+  position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:5;
+  border-bottom:1px solid var(--rule)}
+.find{flex:1 1 230px;min-width:0;position:relative}
+.find input{width:100%;background:var(--sunk);border:1px solid var(--rule);padding:9px 11px 9px 33px;
+  color:var(--ink);font:inherit;font-size:14px}
+.find input::placeholder{color:var(--ink-4)}
+.find svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);stroke:var(--ink-4);fill:none;
+  stroke-width:2.2}
+.logins{display:flex;border:1px solid var(--rule);flex-wrap:wrap}
+.logins button{border-right:1px solid var(--rule);padding:9px 11px;cursor:pointer;font-family:var(--f-data);
+  font-size:11px;letter-spacing:.07em;color:var(--ink-3)}
+.logins button:last-child{border-right:0}
+.logins button[aria-pressed="true"]{background:var(--mark);color:var(--on-mark)}
+.logins button:hover:not([aria-pressed="true"]){color:var(--ink);background:var(--sunk)}
+select{background:var(--sunk);border:1px solid var(--rule);padding:9px 9px;color:var(--ink);font:inherit;
+  font-size:13.5px;max-width:100%}
+.clear{border:1px solid var(--rule);padding:9px 12px;cursor:pointer;font-family:var(--f-data);font-size:11px;
+  letter-spacing:.07em;color:var(--ink-3)}
+.clear:hover{border-color:var(--rule-2);color:var(--ink)}
+.tally{margin-left:auto;font-family:var(--f-data);font-size:11.5px;color:var(--ink-3);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
 
-/* capability cards */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:1px;background:var(--line);
-  border:1px solid var(--line);min-width:0}
-.card{background:var(--bg);border:0;text-align:left;padding:13px;cursor:pointer;display:flex;
-  flex-direction:column;gap:8px;min-width:0;transition:background .12s}
-.card:hover{background:var(--surface)}
-.card[aria-current="true"]{background:var(--solid);color:var(--on-solid)}
-.card[aria-current="true"] .cid,.card[aria-current="true"] .ccat{color:var(--on-solid);opacity:.72}
-.card[aria-current="true"] .chip{border-color:var(--on-solid);color:var(--on-solid)}
-.card[aria-current="true"] .chip.on{background:var(--on-solid);color:var(--solid)}
-.card[aria-current="true"] .opn,.card[aria-current="true"] .mrk{border-color:var(--on-solid);color:var(--on-solid);opacity:.8}
-.ctop{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.cid{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-4);letter-spacing:.04em}
-.cname{font-weight:500;font-size:14px;line-height:1.3;letter-spacing:-.008em}
-.cbot{display:flex;justify-content:space-between;align-items:flex-end;gap:6px;margin-top:auto;flex-wrap:wrap}
-.ccat{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4)}
-.chipset{display:inline-flex;gap:2px;flex-wrap:wrap}
-.chip{display:inline-grid;place-items:center;min-width:25px;height:15px;padding:0 2px;
-  border:1px solid var(--line-2);border-radius:1px;font-family:var(--f-mono);font-size:8px;font-weight:600;
-  color:var(--ink-4)}
-.chip.on{background:var(--solid);color:var(--on-solid);border-color:var(--solid)}
-.st{font-size:11px;line-height:1}
-.opn,.mrk{font-family:var(--f-mono);font-size:9px;letter-spacing:.05em;color:var(--ink-4);
-  border:1px solid var(--line);padding:1px 4px;white-space:nowrap}
+/* ── two-pane ───────────────────────────────────────── */
+.panes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,452px);gap:30px;align-items:start;
+  padding-bottom:64px}
+@media (max-width:1020px){
+  .panes{grid-template-columns:1fr;gap:22px}
+  .read{order:-1;position:static!important;max-height:none!important}
+}
 
-/* detail panel */
-.panel{position:sticky;top:12px;background:var(--raised);border:1px solid var(--line);box-shadow:var(--shadow);
-  padding:18px;min-width:0;max-height:calc(100vh - 24px);overflow:auto}
-@media (max-width:980px){ .panel{position:static;max-height:none} }
-.panel .pid{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-3)}
-.panel h2{font-size:21px;line-height:1.18;letter-spacing:-.02em;margin:7px 0 0;font-weight:600;text-wrap:balance}
-.panel .desc{color:var(--ink-2);margin:12px 0 0;font-size:14px}
-.dl{margin:16px 0 0;border-top:1px solid var(--line)}
-.dl div{display:grid;grid-template-columns:76px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);
-  font-size:13px;min-width:0}
-.dl dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);padding-top:2px}
-.dl dd{margin:0;min-width:0;overflow-wrap:anywhere}
-.where{display:flex;flex-direction:column;gap:7px}
-.where b{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;color:var(--ink-3);display:block}
-.ops{margin:16px 0 0;border-top:1px solid var(--line);padding-top:13px}
-.ops h3,.mref h3{margin:0 0 9px;font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--ink-3);font-weight:600;display:flex;justify-content:space-between;gap:8px}
-.ops h3 em{font-style:normal;color:var(--ink-4)}
-.ops ol{list-style:none;margin:0;padding:0;counter-reset:o}
-.ops li{counter-increment:o;position:relative;padding:5px 0 5px 24px;font-size:13px;color:var(--ink-2);
-  border-bottom:1px dotted var(--line);line-height:1.42}
-.ops li:last-child{border-bottom:0}
-.ops li::before{content:counter(o,decimal-leading-zero);position:absolute;left:0;top:6px;
-  font-family:var(--f-mono);font-size:9.5px;color:var(--ink-4)}
-.flag{border-left:2px solid var(--solid);padding:8px 0 8px 11px;margin-top:14px;font-size:13px;color:var(--ink-2);
-  background:var(--surface)}
-.mref{margin-top:16px;border-top:1px solid var(--line);padding-top:13px}
-.rel{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-.rel button{background:var(--surface);border:1px solid var(--line);border-radius:1px;padding:4px 8px;cursor:pointer;
-  font-size:12px;color:var(--ink-2);text-align:left}
-.rel button:hover{border-color:var(--solid);color:var(--ink)}
-.empty{color:var(--ink-3);font-size:13.5px}
-.empty h2{color:var(--ink)}
+/* ── the index ──────────────────────────────────────── */
+.group{margin-top:22px}
+.group:first-child{margin-top:8px}
+.group > h2{display:flex;align-items:baseline;gap:9px;margin:0 0 2px;padding-bottom:7px;
+  border-bottom:1px solid var(--ink);font-size:13px;font-weight:600;letter-spacing:.02em}
+.group > h2 i{font-style:normal;font-family:var(--f-data);font-size:11px;color:var(--ink-4);font-weight:400}
+.row{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:12px;align-items:baseline;width:100%;
+  text-align:left;padding:9px 8px 9px 0;cursor:pointer;border-bottom:1px solid var(--rule)}
+.row:hover{background:var(--sunk)}
+.row[aria-current="true"]{background:var(--mark);color:var(--on-mark);padding-left:8px}
+.row[aria-current="true"] .rid,.row[aria-current="true"] .tag,.row[aria-current="true"] .rops{
+  color:var(--on-mark);opacity:.74;border-color:currentColor}
+.rid{font-family:var(--f-data);font-size:11px;color:var(--ink-4);letter-spacing:.03em}
+.rname{font-size:14.5px;line-height:1.35;min-width:0;letter-spacing:-.006em}
+.rname u{text-decoration:none;background:var(--rule-2);color:var(--ink);padding:0 1px}
+.row[aria-current="true"] .rname u{background:var(--on-mark);color:var(--mark)}
+.dot{display:inline-block;margin-left:6px;font-size:10px;color:var(--ink-4);vertical-align:1px}
+.tags{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-family:var(--f-data);font-size:9.5px;letter-spacing:.06em;color:var(--ink-3);border:1px solid var(--rule-2);
+  padding:1px 4px;white-space:nowrap}
+.tag.more{border-style:dashed}
+.rops{font-family:var(--f-data);font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums;
+  min-width:44px;text-align:right}
+.none{padding:34px 0;color:var(--ink-3);font-family:var(--f-read)}
 
-/* manuals */
-.mans{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--line);
-  border:1px solid var(--line)}
-.man{background:var(--bg);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.man .mt{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.man h3{margin:0;font-size:15.5px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
-.man .mid{font-family:var(--f-mono);font-size:10px;color:var(--ink-4);letter-spacing:.08em;flex:none}
-.man p{margin:0;font-size:13.5px;color:var(--ink-2)}
-.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.pill{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
-  border:1px solid var(--line);padding:2px 6px;white-space:nowrap}
-.pill.k{background:var(--solid);color:var(--on-solid);border-color:var(--solid)}
-.acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
-.dl-btn{display:inline-flex;align-items:center;gap:7px;background:var(--solid);color:var(--on-solid);border:0;
-  padding:8px 12px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;
-  text-transform:uppercase;text-decoration:none;align-self:flex-start}
-.dl-btn:hover{opacity:.84}
-.dl-btn.ghost{background:none;color:var(--ink-2);border:1px solid var(--line-2)}
-.dl-btn.ghost:hover{border-color:var(--solid);color:var(--ink);opacity:1}
+/* ── the reading pane ───────────────────────────────── */
+.read{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);background:var(--raise);
+  border:1px solid var(--rule);padding:22px;max-height:calc(100vh - 96px);overflow:auto}
+.eyebrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.read h2{font-size:24px;line-height:1.14;letter-spacing:-.022em;margin:10px 0 0;font-weight:600;
+  text-wrap:balance}
+.lead{font-family:var(--f-read);font-size:15.5px;line-height:1.6;color:var(--ink-2);margin:13px 0 0}
+.block{margin-top:22px;border-top:1px solid var(--rule);padding-top:14px}
+.block > h3{margin:0 0 11px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.block > h3 i{font-style:normal;font-family:var(--f-data);font-size:11px;color:var(--ink-4);
+  font-variant-numeric:tabular-nums}
+.paths{display:flex;flex-direction:column;gap:11px}
+.path{display:grid;grid-template-columns:62px minmax(0,1fr);gap:11px;align-items:baseline}
+.path code{font-family:var(--f-data);font-size:12.5px;color:var(--ink-2);overflow-wrap:anywhere;line-height:1.45}
+.path span{font-family:var(--f-data);font-size:9.5px;letter-spacing:.06em;color:var(--on-mark);
+  background:var(--mark);padding:2px 0;text-align:center}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:24px minmax(0,1fr);gap:9px;
+  padding:6px 0;border-bottom:1px dotted var(--rule);font-size:13.5px;color:var(--ink-2);line-height:1.45}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-data);font-size:10.5px;
+  color:var(--ink-4);padding-top:2px}
+.caution{margin-top:18px;background:var(--sunk);border-left:2px solid var(--mark);padding:12px 14px;
+  font-family:var(--f-read);font-size:14px;line-height:1.55;color:var(--ink-2)}
+.chipline{display:flex;flex-wrap:wrap;gap:6px}
+.chipline button,.chipline a{border:1px solid var(--rule);padding:6px 9px;cursor:pointer;font-size:12.5px;
+  color:var(--ink-2);text-align:left;text-decoration:none}
+.chipline button:hover,.chipline a:hover{border-color:var(--mark);color:var(--ink)}
+.rest dl{margin:0;display:grid;grid-template-columns:1fr auto auto;gap:0 14px;align-items:baseline}
+.rest dt{padding:7px 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+.rest dd{margin:0;padding:7px 0;border-bottom:1px solid var(--rule);font-family:var(--f-data);font-size:11.5px;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;text-align:right}
 
-/* overlaps */
-.ovl{border:1px solid var(--line);border-bottom:0;min-width:0}
-.ov{border-bottom:1px solid var(--line);background:var(--bg)}
-.ovh{width:100%;background:none;border:0;display:flex;gap:12px;align-items:center;padding:13px 14px;cursor:pointer;
-  text-align:left;min-width:0}
-.ovh:hover{background:var(--surface)}
-.ovh .ovn{font-weight:500;flex:1 1 auto;min-width:0;font-size:14.5px}
-.ovb{padding:0 14px 14px;font-size:13.5px;color:var(--ink-2)}
+/* ── manuals ────────────────────────────────────────── */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:18px;margin-top:20px}
+.vol{border:1px solid var(--rule);border-top:2px solid var(--ink);padding:16px;display:flex;
+  flex-direction:column;gap:9px;min-width:0}
+.vol:hover{background:var(--sunk)}
+.vol h3{margin:0;font-size:15.5px;font-weight:600;line-height:1.26;letter-spacing:-.012em}
+.vol p{margin:0;font-family:var(--f-read);font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.volmeta{display:flex;gap:9px;flex-wrap:wrap;align-items:baseline}
+.acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:4px}
+.go{display:inline-flex;align-items:center;gap:7px;background:var(--mark);color:var(--on-mark);
+  padding:8px 12px;cursor:pointer;font-family:var(--f-data);font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;text-decoration:none}
+.go:hover{opacity:.85}
+.go.quiet{background:none;color:var(--ink-2);border:1px solid var(--rule-2)}
+.go.quiet:hover{border-color:var(--mark);color:var(--ink);opacity:1}
 
-/* menus */
-.menus{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:16px;min-width:0}
-.menu{border:1px solid var(--line);padding:15px;min-width:0}
-.menu h3{margin:0 0 11px;font-size:13px;font-family:var(--f-mono);letter-spacing:.09em;text-transform:uppercase;
-  border-bottom:1px solid var(--solid);padding-bottom:8px;font-weight:600}
-.menu ol{list-style:none;margin:0;padding:0;counter-reset:m}
-.menu li{counter-increment:m;position:relative;padding:5px 0 5px 26px;font-size:13.5px;border-bottom:1px dotted var(--line)}
-.menu li:last-child{border-bottom:0}
-.menu li::before{content:counter(m,decimal-leading-zero);position:absolute;left:0;top:6px;font-family:var(--f-mono);
-  font-size:9.5px;color:var(--ink-4)}
-.steps{border:1px solid var(--line);min-width:0;overflow-x:auto}
-.steps table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:420px}
-.steps th{background:var(--solid);color:var(--on-solid);text-align:left;padding:9px 11px;font-family:var(--f-mono);
+/* ── overlaps + menus ───────────────────────────────── */
+.stack{border-top:1px solid var(--ink);margin-top:20px}
+.pair{border-bottom:1px solid var(--rule)}
+.pairhead{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center;width:100%;
+  text-align:left;padding:13px 0;cursor:pointer}
+.pairhead:hover{color:var(--ink)}
+.pairhead strong{font-weight:500;font-size:15px;min-width:0}
+.pairbody{padding:0 0 16px;max-width:76ch}
+.pairbody p{margin:0 0 10px;font-family:var(--f-read);font-size:14px;line-height:1.55;color:var(--ink-2)}
+.cols{columns:2;column-gap:28px;margin-top:20px}
+@media (max-width:760px){ .cols{columns:1} }
+.card{break-inside:avoid;border:1px solid var(--rule);padding:15px;margin-bottom:18px}
+.card h3{margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--ink);font-size:12.5px;
+  font-family:var(--f-data);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.card ol{list-style:none;margin:0;padding:0;counter-reset:n}
+.card li{counter-increment:n;display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:4px 0;
+  font-size:13.5px;border-bottom:1px dotted var(--rule)}
+.card li:last-child{border-bottom:0}
+.card li::before{content:counter(n,decimal-leading-zero);font-family:var(--f-data);font-size:10px;
+  color:var(--ink-4);padding-top:3px}
+table.seq{border-collapse:collapse;width:100%;margin-top:20px;font-size:13.5px}
+table.seq th{background:var(--mark);color:var(--on-mark);text-align:left;padding:9px 11px;font-family:var(--f-data);
   font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-.steps td{padding:8px 11px;border-bottom:1px solid var(--line);color:var(--ink-2)}
-.steps .n{font-family:var(--f-mono);color:var(--ink-4);font-size:11.5px;width:38px}
-.hint{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin:0}
-footer{border-top:1px solid var(--line);padding-block:20px 34px;color:var(--ink-3);font-size:12.5px}
-footer a{color:var(--ink-2)}
+table.seq td{padding:8px 11px;border-bottom:1px solid var(--rule);color:var(--ink-2)}
+table.seq td:first-child{font-family:var(--f-data);color:var(--ink-4);width:40px}
+.note{font-family:var(--f-read);font-size:14px;color:var(--ink-3);margin:14px 0 0;max-width:72ch;line-height:1.55}
+footer{border-top:1px solid var(--rule);padding-block:22px 36px;color:var(--ink-3);font-family:var(--f-read);
+  font-size:13.5px;line-height:1.6;max-width:78ch}
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 </style>
 </head>
 <body>
 <div class="wrap">
+
 <header>
-  <div class="top">
-    <div>
-      <div class="eyebrow">Contineo SIMS &nbsp;/&nbsp; ncet-sims &nbsp;/&nbsp; internal requirement capture</div>
+  <div class="head">
+    <div class="brand">
+      <div class="lbl">Contineo SIMS &nbsp;&middot;&nbsp; ncet-sims.contineo.in</div>
       <h1>Every function, and the login it lives in.</h1>
-      <p class="tagline">Click any capability to see what it does, where it sits in the menus, which of the seven
-      logins expose it, and every operation available once you are there. Built from the walkthrough recordings
-      and the nineteen Contineo user manuals.</p>
+      <p class="sub">A working index of the student ERP as it actually runs: what each screen does,
+      where it sits in the menus, and every operation available once you are there.</p>
     </div>
     <div class="theme" role="group" aria-label="Colour theme">
-      <button data-th="light" title="Light" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg></button>
-      <button data-th="auto" title="Match system" aria-pressed="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="4" width="19" height="13" rx="1.5"/><path d="M8 20h8"/></svg></button>
-      <button data-th="dark" title="Dark" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg></button>
+      <button data-th="light" title="Light" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg></button>
+      <button data-th="auto" title="Match the system" aria-pressed="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.6" y="4.2" width="18.8" height="13" rx="1.4"/><path d="M8.5 20.2h7"/></svg></button>
+      <button data-th="dark" title="Dark" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.6A8.6 8.6 0 0 1 9.4 4 8.6 8.6 0 1 0 20 14.6z"/></svg></button>
     </div>
   </div>
-  <div class="stats" id="stats"></div>
+  <div class="figs" id="figs"></div>
 </header>
 
-<div class="tabs" role="tablist">
-  <button class="tab" role="tab" id="t-atlas" aria-selected="true" aria-controls="v-atlas">Capabilities <small id="n1"></small></button>
-  <button class="tab" role="tab" id="t-manuals" aria-selected="false" aria-controls="v-manuals">Manuals <small id="n4"></small></button>
-  <button class="tab" role="tab" id="t-overlaps" aria-selected="false" aria-controls="v-overlaps">Repeated <small id="n2"></small></button>
-  <button class="tab" role="tab" id="t-menus" aria-selected="false" aria-controls="v-menus">Menus <small id="n3"></small></button>
-</div>
+<nav class="tabs" role="tablist">
+  <button class="tab" role="tab" id="t-index" aria-selected="true" aria-controls="v-index">Capabilities <b id="c1"></b></button>
+  <button class="tab" role="tab" id="t-manuals" aria-selected="false" aria-controls="v-manuals">Manuals <b id="c4"></b></button>
+  <button class="tab" role="tab" id="t-repeats" aria-selected="false" aria-controls="v-repeats">Repeated <b id="c2"></b></button>
+  <button class="tab" role="tab" id="t-menus" aria-selected="false" aria-controls="v-menus">Menus <b id="c3"></b></button>
+</nav>
 
-<section id="v-atlas" role="tabpanel" aria-labelledby="t-atlas">
-  <div class="bar">
-    <div class="search">
-      <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-      <input id="q" type="search" placeholder="Search capabilities, operations, menus&hellip;" aria-label="Search">
+<section id="v-index" role="tabpanel" aria-labelledby="t-index">
+  <div class="tools">
+    <div class="find">
+      <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+      <input id="q" type="search" placeholder="Search names, operations and menu paths" aria-label="Search capabilities">
     </div>
-    <div class="seg" role="group" aria-label="Filter by login" id="lgseg"></div>
-    <select id="cat" aria-label="Filter by category"><option value="">All categories</option></select>
-    <select id="shared" aria-label="Filter by sharing">
-      <option value="">Shared or not</option>
-      <option value="multi">Shared across logins</option>
-      <option value="all3">In three or more logins</option>
-      <option value="solo">Unique to one login</option>
+    <div class="logins" role="group" aria-label="Filter by login" id="lg"></div>
+    <select id="cat" aria-label="Filter by area"><option value="">Every area</option></select>
+    <select id="reach" aria-label="Filter by reach">
+      <option value="">Any reach</option>
+      <option value="solo">Only one login has it</option>
+      <option value="multi">Two or more logins</option>
+      <option value="all3">Three or more logins</option>
       <option value="unused">Present but unused</option>
     </select>
-    <select id="src" aria-label="Filter by source">
-      <option value="">Any source</option>
+    <select id="src" aria-label="Filter by evidence">
+      <option value="">Any evidence</option>
       <option value="video">Seen in a recording</option>
-      <option value="manual">From a manual only</option>
-      <option value="both">Both</option>
+      <option value="manual">Only in a manual</option>
+      <option value="both">Recording and manual</option>
       <option value="hasman">Has a manual</option>
     </select>
-    <button class="reset" id="reset" type="button">Clear</button>
-    <div class="count" id="count"></div>
+    <button class="clear" id="clear" type="button">Reset</button>
+    <div class="tally" id="tally"></div>
   </div>
-  <div class="cols">
-    <div class="grid" id="grid"></div>
-    <aside class="panel" id="panel" aria-live="polite"></aside>
+  <div class="panes">
+    <div id="index"></div>
+    <aside class="read" id="read" aria-live="polite"></aside>
   </div>
 </section>
 
 <section id="v-manuals" role="tabpanel" aria-labelledby="t-manuals" hidden>
-  <div class="bar"><p class="hint" id="manhint">Nineteen manuals &middot; 387 pages &middot; every step folded into the capabilities above</p></div>
-  <div class="cols">
-    <div class="mans" id="mans"></div>
-    <aside class="panel" id="panel3" aria-live="polite"></aside>
-  </div>
+  <p class="note" id="manhint"></p>
+  <div class="shelf" id="shelf"></div>
 </section>
 
-<section id="v-overlaps" role="tabpanel" aria-labelledby="t-overlaps" hidden>
-  <div class="bar"><p class="hint">Where the same job is done in more than one place</p></div>
-  <div class="cols">
-    <div class="ovl" id="ovl"></div>
-    <aside class="panel" id="panel2" aria-live="polite"></aside>
-  </div>
+<section id="v-repeats" role="tabpanel" aria-labelledby="t-repeats" hidden>
+  <p class="note">Thirty-nine jobs that more than one login can do. Each one is a decision for a rebuild:
+  keep the duplication deliberately, or collapse it.</p>
+  <div class="stack" id="repeats"></div>
 </section>
 
 <section id="v-menus" role="tabpanel" aria-labelledby="t-menus" hidden>
-  <div class="bar"><p class="hint">Transcribed from the screen &mdash; spelling as the product shows it</p></div>
-  <div style="padding-bottom:26px">
-    <div class="menus" id="menus"></div>
-    <h3 style="font-size:13px;font-family:var(--f-mono);letter-spacing:.09em;text-transform:uppercase;margin:26px 0 11px">Term setup activities</h3>
-    <div class="steps"><table><thead><tr><th class="n">#</th><th>Activity</th><th style="width:150px">Responsibility</th></tr></thead><tbody id="steps"></tbody></table></div>
-  </div>
+  <p class="note">Every menu, transcribed from the screen, spelling and all &mdash; including
+  &ldquo;Calender Of Events&rdquo;, which the product has always misspelt.</p>
+  <div class="cols" id="menus"></div>
+  <h3 class="lbl" style="margin:28px 0 0">The term setup sequence</h3>
+  <table class="seq"><thead><tr><th>#</th><th>Activity</th><th style="width:170px">Owner</th></tr></thead>
+  <tbody id="seq"></tbody></table>
 </section>
 
-<footer>
-  Internal requirement capture for Nagarjuna College of Engineering and Technology. Seven logins mapped;
-  Admission and Examination remain outside every walkthrough.
-  The Contineo user manuals are the vendor's confidential documents and are <strong>not</strong> republished here &mdash;
-  only what they describe, in our own words.
-</footer>
+<footer id="foot"></footer>
 </div>
 
 <script>
 const D = {"meta":{"product":"Contineo SIMS","instance":"ncet-sims.contineo.in/sims","institution":"Nagarjuna College of Engineering and Technology, Bangalore (autonomous, VTU)","session":"Demo of Contineo Module for ERP Development","date":"14 November 2026","logins":{"DC":"Department Coordinator","FAC":"Faculty / Staff","HOD":"Head of Department"}},"features":[{"id":"F01","name":"Course creation","cat":"Courses","logins":["DC"],"path":{"DC":"Top nav > Course creation"},"status":"live","plate":"add_course","desc":"Create a course against the approved scheme: name, code, type, subject area, cycle, availability, Is-Bridge flag, L-T-P-S, credits, course nature, CIE and SEE maximum marks.","ops":["Enter course name","Enter course code (no spaces)","Select course type — Theory / Lab / Seminar / Project / Mini Project / Integrated","Select subject area — Basic Science / Engineering Science / Professional Studies Core / Professional Studies Elective","Select course cycle — Physics / Chemistry / Both (first year only)","Select availability area — Base department only / All departments","Tick the offering departments (electives only)","Set Is Bridge — Yes / No","Enter L-T-P-S","Enter total credits","Choose type of course — Regular where overall CIE eligibility is 40%","Select theory CIE eligibility percentage","Select practical CIE eligibility percentage (integrated courses)","Enter CIE maximum marks","Enter SEE maximum marks","Submit","Select Save & Add New to keep creating","Select Save & View to check what was created","For an integrated course choose “Separate CIE eligibility for Theory and Practical”","For an elective choose subject area “Professional Studies Elective”","For an open elective choose subject area “Other Elective”"],"src":"both","man":["M01"]},{"id":"F02","name":"View / edit courses","cat":"Courses","logins":["DC"],"path":{"DC":"Course creation > View"},"status":"live","plate":"course_list","desc":"List every course created for a semester and edit it. Editing is locked once the timetable exists; after that a helpdesk ticket is required.","ops":["Pick a semester","List every course created for it","Open a course record","Edit a course — only until the timetable exists","Read back credits, L-T-P-S and flags","Courses from previous terms are listed alongside the current term","Course code and total credits cannot be edited — the helpdesk must do it","Deleting a wrongly created course needs a helpdesk request"],"src":"both","man":["M01"],"note":"Because examinations run on the old course codes, the manual asks colleges to clear any code change with the Controller of Examinations before raising the request."},{"id":"F03","name":"Assign courses to semester","cat":"Courses","logins":["DC"],"path":{"DC":"Top nav > Assign Course"},"status":"live","plate":"reg_section","desc":"Drag created courses into the target semester, then set per-course parameters: credit / non-credit, audit, batch required.","ops":["Pick the target semester","Drag a course from available into assigned","Drop several courses in one pass","Save the assignment","Click Program to pull in another department's courses","Choose that department from the dropdown","Confirm the popup with OK, then Save"],"src":"both","man":["M02"]},{"id":"F04","name":"Set parameters","cat":"Courses","logins":["DC"],"path":{"DC":"Assign Course > Set Parameters"},"status":"live","desc":"Second stage of assignment: flags that drive registration, attendance and batching behaviour for the course.","ops":["Set credit / non-credit","Set audit course","Set need batches — Yes / No","Set need attendance — Yes / No","Set course nature — Core / Elective","Save","Need Batches must be Yes for any integrated, lab or practical course"],"src":"both","man":["M02"]},{"id":"F05","name":"View assigned courses","cat":"Courses","logins":["DC"],"path":{"DC":"Assign Course > View Assigned Courses"},"status":"live","desc":"Verification list of courses now attached to the semester, with the sections they will run in.","ops":["Pick a semester","Read the assigned-course list with its sections","Confirm each course carries the right parameters before registration","Edit an assigned course here — but only before the timetable is entered","Click Update to save the edit"],"src":"both","man":["M02"],"note":"The manual's warning: verify every parameter carefully, because this data moves to the examination system."},{"id":"F06","name":"Promote students","cat":"Students","logins":["DC"],"path":{"DC":"Top nav > Student > Promote Students"},"status":"live","desc":"Move eligible students into the semester. The eligible list is produced by the examination result sync, showing credits earned and failed credits.","ops":["Pick the semester to promote into","Read the eligible list with credits earned and failed credits","Tick a student","Tick the whole list","Promote the selection","Remove passed-out students from the assign division before promoting 7th to 8th semester","By default every student is ticked as eligible — untick those who are not","Click Promote"],"src":"both","man":["M03"]},{"id":"F07","name":"Assign division (sections)","cat":"Students","logins":["DC"],"path":{"DC":"Top nav > Student > Assign Division"},"status":"live","plate":"assign_div","desc":"Allocate each promoted student to a section. USNs highlighted in yellow indicate registration is not yet done for that student.","ops":["Pick semester and section","Set a student's section with the radio button","Read the per-section head count","Spot unregistered students by the yellow USN highlight","Jump to Register for Courses","Jump to Register Backlog Course","Save","Assign roll numbers alongside the section","A yellow USN means the student has not registered","A red USN means the proctor has not approved the registration","Semesters 1 and 2 are a virtual department, so 2nd-to-3rd promotion always needs a section"],"src":"both","man":["M03"]},{"id":"F08","name":"Bulk course registration","cat":"Students","logins":["DC"],"path":{"DC":"Assign Course > Course Registration Sectionwise"},"status":"live","plate":"reg_sem7","desc":"Select sections plus multiple non-elective courses and register the whole cohort in one action.","ops":["Select one or more sections","Multi-select courses with Ctrl / Shift","Leave electives out of the selection","Press DO REGISTRATION","Register a whole cohort against several courses at once"],"src":"both","man":["M04"]},{"id":"F09","name":"Individual student registration","cat":"Students","logins":["DC"],"path":{"DC":"Top nav > Student > Registration Data"},"status":"live","plate":"reg_individual","desc":"Search a student by USN and tick their courses, including professional elective and open elective. Shows the running total of registered credits.","ops":["Search the student by USN","Open Registration Data","Press Edit","Tick each course for the semester","Tick the professional elective","Tick the open elective","Watch the running credit total","Submit","Choose Re-registration for a repeated course, not fresh registration"],"src":"both","man":["M04"]},{"id":"F10","name":"Elective / open-elective assignment","cat":"Students","logins":["DC"],"path":{"DC":"Assign Course > elective tab"},"status":"live","desc":"Per-student elective allocation. Bulk registration cannot be used because each student may pick a different elective; preferences are collected off-system.","ops":["Pick the semester offering electives","Read the student × elective grid","Tick the elective each student chose","Assign the selection","Key in preferences gathered off-system (Google Form or faculty list)","Click Register Elective Courses","Tick the course against each student","Click Assign"],"src":"both","man":["M04"]},{"id":"F11","name":"Student self-registration","cat":"Students","logins":["SP"],"path":{"SP":"Portal > Course Registration"},"status":"live","desc":"Students register for their own courses from the student portal. The window is opened and closed per department and semester by the SPOC.","ops":["See the courses the student is eligible for","Select courses","Register","Only possible while the SPOC has registration enabled for that semester"],"src":"video"},{"id":"F12","name":"Create batches","cat":"Courses","logins":["DC"],"path":{"DC":"Assign Course > Create Batches"},"status":"live","plate":"create_batches","desc":"Declare how many lab batches each course needs per section. Theory = 1, hardware lab (capacity ~30) = 2, software lab (capacity ~60) = 1.","ops":["Pick a section","Choose the batch count per course from the dropdown","Give theory courses 1 batch","Give hardware-lab courses 2 batches","Give whole-section software labs 1 batch","Save","Create batches in Section A only for elective and open-elective courses","Create a separate batch in Section A where two faculty run the same elective at once","Delete Batches, Add Batch and copying batches from another section all lock once the timetable exists"],"src":"both","man":["M05"]},{"id":"F13","name":"Assign lab batches","cat":"Students","logins":["DC"],"path":{"DC":"Assign Course > Assign Lab Batches"},"status":"live","plate":"assign_lab","desc":"Place each student into a specific lab batch. The split itself is decided offline by the department.","ops":["Pick the course and section","Put each student into Batch 1 or Batch 2","Read the running count per batch","Save the split decided offline by the department","Use Clear Allotment to wipe the batch allocation","Copy a batch split from another course, section-wise"],"src":"both","man":["M05"]},{"id":"F14","name":"Create timetable","cat":"Timetable","logins":["DC"],"path":{"DC":"Top nav > Timetable creation"},"status":"live","plate":"tt_grid","desc":"Slot-by-slot entry per section: course, period type, room, teacher. No room-clash or faculty-double-booking validation exists.","ops":["Pick semester and section","Drag into a time slot","Select the course","Select the period type","Select the room","Select the teacher","Place electives on Section A only","Submit the grid","No room-clash or faculty-clash check runs","Start and end dates default from the calendar of events","For a lab, pick the batch and set period type Practical","For an integrated course's theory class, pick all batches and period type Theory","Delete a single period or slot from Show Time Table"],"src":"both","man":["M07"],"note":"Prerequisites, in order: the college sends the calendar of events, Contineo loads it, then courses, batches and teacher assignment must all exist. Until then the system refuses timetable entry."},{"id":"F15","name":"Verify / view timetable","cat":"Timetable","logins":["DC","FAC","HOD","SP"],"path":{"DC":"Timetable creation > Verify Timetable","FAC":"Dashboard > Rolling Timetable","HOD":"Functions > View Timetable","SP":"Student portal > Time Table"},"status":"live","plate":"tt_view","desc":"Read-back of the weekly Monday-to-Saturday grid. The coordinator verifies it, the faculty sees their own rolling day view, the HOD views any section.","dup":"timetable-view","ops":["Pick department, semester and section","Read the Monday-to-Saturday grid","Read course codes and the teacher against each slot","Faculty see only today, as the Rolling Timetable","Page a week back or forward","Switch the theory and practical views","Read time, course code and name, faculty, optional faculty, room number and batch"],"src":"both","man":["M07","M08"]},{"id":"F16","name":"Open elective timetable","cat":"Timetable","logins":["DC"],"path":{"DC":"Timetable creation > Open Elective"},"status":"live","plate":"tt_openelect","desc":"A separate timetable surface for open electives, which draw students from every branch and so cannot sit on a single section grid.","ops":["Open the separate open-elective tab","Build the open-elective grid","View it through Open Elective View Time table","Keep it off the normal section timetable"],"src":"both","man":["M07"]},{"id":"F17","name":"Scheme report","cat":"Courses","logins":["DC","SPOC"],"path":{"DC":"Top nav > Scheme Report","SPOC":"Reports > COURSE SCHEME REPORT"},"status":"live","plate":"scheme_report","desc":"Course scheme report verification — step 10 of term setup, to be completed before faculty start taking attendance.","ops":["Pick a semester","Read each course card — L-T-P-S, credits, need attendance, non-credit/audit, course nature, need batches, offering department, course coordinator","Download the report","Verify before faculty start taking attendance","Choose stream, department, semester and file type","Click Generate","Verify L-T-P-S, total credits, course code and name, CIE and SEE marks, is-audit, need-attendance, course type, need-batches, is-integrated and the CIE eligibility percentages","Take the HOD's signature on the approved report","Send the signed scan to the Contineo helpdesk and the Controller of Examinations"],"src":"both","man":["M09"],"note":"The manual calls this a prerequisite for freezing, examination conduction and result processing — the verification gate the whole term rests on."},{"id":"F18","name":"Fields report","cat":"Monitoring","logins":["DC","SPOC"],"path":{"DC":"Top nav > Fields Report","SPOC":"Reports > Fields Report"},"status":"live","desc":"Coordinator-side report surface. Present in the navigation; not opened during the demonstration.","ops":["Present on the coordinator bar; not opened during the walkthrough"],"src":"video"},{"id":"F19","name":"Transaction list","cat":"Monitoring","logins":["DC"],"path":{"DC":"Top nav > Transaction List"},"status":"live","desc":"Log of setup transactions performed in the login. Present in the navigation; not opened during the demonstration.","ops":["Present on the coordinator bar; not opened during the walkthrough"],"src":"video"},{"id":"F20","name":"Notice board","cat":"Support","logins":["DC"],"path":{"DC":"Top nav > Notice Board"},"status":"live","desc":"Departmental notices. The faculty dashboard carries a matching NOTICE banner.","dup":"notice","ops":["Post a departmental notice","Feeds the NOTICE banner on the faculty and HOD dashboards"],"src":"video"},{"id":"F21","name":"Teacher directory","cat":"Staff","logins":["DC","HOD","SPOC","IQAC"],"path":{"DC":"Top nav > Teacher","HOD":"Functions > Teacher Search","SPOC":"Functions > Teacher Search","IQAC":"Functions > Teacher Search"},"status":"live","plate":"hod_teachers","desc":"Look up staff. The HOD version searches college-wide by alphabet index and returns designation, department, mobile and email.","dup":"teacher-lookup","ops":["Jump by letter through the A-Z index","Search a teacher by name","Read designation, department, mobile and e-mail","Search beyond your own department","See every programme a teacher is mapped to, across departments"],"src":"video"},{"id":"F22","name":"Assign teacher to course","cat":"Staff","logins":["DC","HOD"],"path":{"DC":"Term setup step 8","HOD":"Functions > Assign Teacher to Course"},"status":"live","plate":"hod_chooseT","desc":"Map a faculty member to each section of a course. The official term-setup sheet puts this on the coordinator; the live menu exposes it under the HOD. Both were stated to work.","dup":"assign-teacher","note":"Ownership was contradicted during the session — resolve before build.","ops":["Pick the assigned department","Pick the semester — 3, 5, 7 or First Year","Open a course","Press Choose Teachers against each section","Map one teacher to several sections","Remove a mapping","Create batches in Section A first for electives, as the red banner instructs","The Choose Teacher button is hidden until batches exist for a need-batches course","Assign batch-wise for integrated courses, whether one faculty or two handle theory and practical"],"src":"both","man":["M06"]},{"id":"F23","name":"Choose teachers picker","cat":"Staff","logins":["HOD"],"path":{"HOD":"Assign Teacher to Course > Choose Teachers"},"status":"live","desc":"Modal faculty picker showing photo cards for every teacher in the college, so cross-department allocation for open electives is possible.","ops":["Browse faculty photo cards","Search within the picker","Pick staff from any department in the college","Confirm the selection"],"src":"both","man":["M06"]},{"id":"F24","name":"Co-ordinator setup","cat":"Staff","logins":["HOD"],"path":{"HOD":"Functions > Co-ordinator setup"},"status":"live","plate":"hod_coordset","desc":"Nominate one course coordinator per course and section, chosen on seniority or experience. This unlocks the course coordinator page in that faculty member's login.","ops":["Pick the semester","Open a course and its sections","Choose which of the teaching faculty is course coordinator","Assign — this unlocks the course coordinator page in that person's login","Pick the semester, then set the staff member as course coordinator"],"src":"both","man":["M19"]},{"id":"F25","name":"Course coordinator page","cat":"OBE","logins":["FAC","HOD"],"path":{"FAC":"Functions > Course coordinator page","HOD":"Functions > Course coordinator page"},"status":"live","desc":"The OBE workbench for a course: define COs, map CO to PO/PSO, set the threshold. Identical entry point in both logins.","dup":"course-coordinator","ops":["Add a course outcome","Edit a course outcome","Map CO to PO","Map CO to PSO","Set the OBE threshold","View config course","Set the QP pattern","Read CIE and SEE attainment once marks exist"],"src":"both","man":["M19"]},{"id":"F26","name":"Take attendance","cat":"Attendance","logins":["FAC"],"path":{"FAC":"My Classes > Take Attendance"},"status":"live","plate":"fac_mark_att","desc":"Mark present/absent against the class the timetable scheduled, then submit. After submission the faculty can no longer edit it.","ops":["Open the class the timetable scheduled","Mark a student present or absent","Mark the whole list present","Submit the sheet","After submit the sheet locks — only the HOD can reopen it","Everyone is present by default — only mark absent and NC","Drag across the green buttons to mark a run of students","Sort by USN, name or roll number","A class only rolls out after its start time has passed"],"src":"both","man":["M08","M10"],"note":"NC — not considered — removes the class from both halves of the percentage: 10 classes, 7 present, 1 absent, 2 NC gives 87.5%, not 70%. It is meant for late admission, sport, NCC and conferences, with proof."},{"id":"F27","name":"Add period","cat":"Attendance","logins":["FAC"],"path":{"FAC":"My Classes > Add Period"},"status":"partial","desc":"Create an unscheduled class — e.g. a Saturday session run against a weekday timetable — so attendance can be recorded against it. Described as still being rolled out.","ops":["Pick the date","Pick the course and lab batch","Create the extra period","Take attendance against it","The entry is logged to the HOD","Pick the date, start time and end time","Enter a reason in the comment box","Click Add — the class joins the existing list","Use it for an extra class, or to cover for a colleague who postponed or deleted theirs"],"src":"both","man":["M10"]},{"id":"F28","name":"Delete / postpone class","cat":"Attendance","logins":["FAC"],"path":{"FAC":"My Classes"},"status":"live","desc":"Remove or defer a scheduled period before attendance is taken.","ops":["Delete a scheduled period","Postpone a scheduled class","Delete when the period will not be conducted or is being exchanged","Postpone when the class moves to a later date or the faculty is on leave"],"src":"both","man":["M10"]},{"id":"F29","name":"View attendance","cat":"Attendance","logins":["FAC"],"path":{"FAC":"My Classes > View Attendance"},"status":"live","plate":"fac_attend","desc":"Per-student attendance percentage with below-85% and below-75% filters, a date range, and PDF / Excel export.","ops":["Set a from and to date","Filter to students below 85%","Filter to students below 75%","Read the percentage per student","Download PDF","Download Excel","Change a status between P, A and NC from the view screen, then Submit","Drag the attendance percentage bar to filter","Search, then download the report"],"src":"both","man":["M10"]},{"id":"F30","name":"Attendance and CIE analysis","cat":"Monitoring","logins":["FAC","HOD","SPOC","IQAC"],"path":{"FAC":"Functions > Attendance and CIE Analysis","HOD":"Functions > Attendance and CIE Analysis","SPOC":"Functions > Attendance and CIE Analysis","IQAC":"Functions > Attendance and CIE Analysis"},"status":"live","plate":"hod_cie","desc":"Identical menu entry in both logins. The faculty sees their own courses; the HOD sees the whole department with a section-wise drill-down.","dup":"attendance-cie","ops":["Pick semester, section and course","Read appeared, absent, minimum, average and maximum per component","Drill from the department summary into one section"],"src":"video"},{"id":"F31","name":"Course CIE analysis (BETA)","cat":"Monitoring","logins":["FAC","HOD"],"path":{"FAC":"CIE Analysis Report","HOD":"Attendance and CIE Analysis > course"},"status":"live","plate":"fac_cie_an","desc":"Per-course statistics — appeared, absent, min, average, max per component — plus top five scorers, students needing special attention, appeared-versus-absent trend, box plot and bell curve.","dup":"cie-analysis","ops":["Read the course summary","Switch between sections and the all-sections overview","Read the top five overall scorers","Read the students needing special attention","Read the average trend","Read appeared versus absent","Read the marks-distribution box plot","Read the bell curve","Read CO attainment within CIE"],"src":"video"},{"id":"F32","name":"CIE marks entry","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > marks"},"status":"live","plate":"fac_cie","desc":"Enter marks per student for each configured component — IAT-1, IAT-2, CC-1, CC-2 and the lab component.","ops":["Pick the component — IAT-1, IAT-2, CC-1, CC-2 or Lab","Key marks in per student","Edit a mark","Delete a mark","Save the sheet","A red CIE1 means the coordinator has set the QP and marks can be entered","Blue NE means the QP is approved and marks are not yet entered","Black NE means the QP is set but not approved — approve it first","Click a mark to edit it","Click Save & Next to move through students"],"src":"both","man":["M12"]},{"id":"F33","name":"Set QP pattern","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > Set QP"},"status":"live","plate":"fac_setqp","desc":"Choose the question paper type — QP based (theory), Parameter based (labs) or Rubrics based (projects and seminars) — against the component, CIE marks and QP marks.","ops":["Read course, code, date, semester and section","Confirm CIE marks and QP marks","Choose QP Based for theory","Choose Parameter Based for labs","Choose Rubrics Based for projects and seminars","Continue to the pattern"],"src":"both","man":["M12"]},{"id":"F34","name":"Question / sub-question setup","cat":"Assessment","logins":["FAC"],"path":{"FAC":"Set QP > Setup"},"status":"live","plate":"fac_subq","desc":"Break each question into sub-questions and tag every one with its maximum marks, Bloom's taxonomy level and the CO it assesses.","ops":["Declare a question has no sub-questions","Declare a question has sub-questions","Set how many sub-questions","Set maximum marks per sub-question","Tag each sub-question with its Bloom's level","Tag each sub-question with the CO it assesses","Save"],"src":"both","man":["M12"]},{"id":"F35","name":"Unit-wise QP configuration","cat":"Assessment","logins":["FAC"],"path":{"FAC":"Set QP > units"},"status":"live","plate":"fac_qp_units","desc":"Unit-by-unit pattern with answer-n-out-of-m rules, per-unit marks and the examination duration. The pattern itself is defined by the examination section.","ops":["Set each unit against its module","Mark a unit MCQ or descriptive","Set the answer-n-of-m rule","Set the marks per unit","Set the examination duration","Open Setup against each question"],"src":"both","man":["M13"]},{"id":"F36","name":"IA marks upload","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > IA Marks Upload"},"status":"live","desc":"Bulk upload of internal assessment marks instead of keying them in.","ops":["Download the upload template","Upload the filled marks file","Replace keyed-in entry for a whole class","Download the CIE QP pattern as an Excel file","Save it as .xls only","Leave a cell blank where the student did not attempt the question","Enter 0 where the student attempted and scored nothing","Leave every cell blank for an absentee, then mark them Absent in the dashboard","Choose the file and click Import","“Uploaded Successfully” confirms it; “upload failed” means a mark exceeded the question's maximum or the wrong file was chosen"],"src":"both","man":["M12"]},{"id":"F37","name":"Download QP pattern","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > Download in QP Pattern"},"status":"live","desc":"Export the configured question paper pattern.","ops":["Download the configured question paper pattern"],"src":"both","man":["M12"]},{"id":"F38","name":"CIE Excel report","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > CIE Excel Report"},"status":"live","desc":"Spreadsheet export of the component marks for a course.","ops":["Generate the CIE spreadsheet for a course","Download it"],"src":"video"},{"id":"F39","name":"CO attainment (course level)","cat":"OBE","logins":["FAC"],"path":{"FAC":"My Classes > CO Attainment"},"status":"live","desc":"Course-outcome attainment computed from the entered marks, with Bloom's-level and CO-level totals charted.","ops":["Read CO-wise attainment for the course","Read the CIE Blooms-levels chart","Read the CIE CO-level totals chart"],"src":"video"},{"id":"F40","name":"LDPR — lecture diary and progress","cat":"Teaching","logins":["FAC","SPOC"],"path":{"FAC":"My Classes > LDPR","SPOC":"Reports > LDPR Report"},"status":"live","plate":"fac_ldpr","desc":"Record modules, topics and percentage of syllabus completed, with a completion flag per topic, a downloadable report and a Clear LDPR action. Progress appears as a bar on each class card.","ops":["Add a module","Add topics under a module","Set percentage of syllabus completed","Flag a topic completed — Yes / No","Date each entry","Edit an entry","Delete an entry","Download the report","Clear LDPR","Progress shows as a bar on the class card","LDPR can only be entered for a class whose attendance is already entered","A module at 100 percent disappears from the selection list"],"src":"both","man":["M16"]},{"id":"F41","name":"Teacher-wise LDPR status","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Functions > First Year Attendance Status"},"status":"live","plate":"hod_ldpr","desc":"Per-teacher syllabus and attendance health: classes scheduled, classes elapsed and attendance entries pending.","dup":"ldpr-view","ops":["Pick a faculty member","Read classes scheduled against classes elapsed","See attendance entries still pending","Read the attendance-health chart","Check marks upload per course"],"src":"video"},{"id":"F42","name":"Counselling — own mentees","cat":"Counselling","logins":["FAC"],"path":{"FAC":"Top nav > Counselling"},"status":"live","plate":"fac_counsel","desc":"Mentee list with tabs for registration data, history, attendance, profile, performance and a consolidated report, plus free-text counselling notes. Roughly 15 to 20 mentees per faculty.","ops":["Open a mentee from the list","Read Registration Data","Read History","Read Attendance","Read Profile","Read Performance","Open the Consolidated Report","Read current-semester course code, CIE and status","Add a counselling note","Tick “follow-up required” on a counselling note","Set the follow-up date","Submit the note"],"src":"both","man":["M17"]},{"id":"F43","name":"Counselling oversight","cat":"Counselling","logins":["HOD","SPOC","CNS"],"path":{"HOD":"Functions > Counselling","SPOC":"Top nav > Counselling","CNS":"Reports > Counselling Report"},"status":"live","plate":"hod_counsel","desc":"Every counsellor in the department with their mentee count and the notes they have recorded. The list still contains faculty who have left the institution.","dup":"counselling","ops":["List every counsellor with their mentee count","Open a counsellor","Read the students mapped to them","Read the notes they recorded","Open the consolidated counselling report","Note that staff who have left are still listed","Choose the date range, stream and department, then click Report"],"note":"The system does not count counselling sessions. It can show one student's counselling report and nothing more — which is what makes the HOD's Counselling Regularity Index thin.","src":"both","man":["M17"]},{"id":"F44","name":"Student profile","cat":"Students","logins":["DC","FAC","HOD","SPOC","CNS"],"path":{"DC":"Top nav > Student","FAC":"Top nav > Student","HOD":"Top nav > Student","SPOC":"Top nav > Student","CNS":"Top nav > Student"},"status":"live","desc":"Full student record — personal details, parent and guardian details, contact and address. Reachable from the Student item in all three navigations.","dup":"student-record","ops":["Read personal details","Read parent and guardian details, occupation and annual income","Read phone, STD code and e-mail","Read permanent address, city, state, country and PIN","View the photograph"],"src":"video"},{"id":"F45","name":"Calendar of events","cat":"Setup","logins":["FAC","HOD","SPOC","IQAC"],"path":{"FAC":"Functions > Calender Of Events","HOD":"Functions > Calender Of Events","SPOC":"Functions > Calender Of Events","IQAC":"Functions > Calender Of Events"},"status":"live","plate":"hod_calendar","desc":"Read-only month grids showing commencement, holidays, IAT and CC windows and the last working day. Authored at college level and published after IQAC and Principal approval.","dup":"calendar","note":"Read-only everywhere, including here. The college prepares the calendar and sends it to the Contineo backend team, who build it into the system; no login can edit it afterwards. Sending it is also what creates the term instance.","ops":["Pick the programme and semester","Read the month grid","Read the legend — holidays, mentor/attendance display, feedback","Find commencement, IAT and CC windows and the last working day","Read-only — authored at college level, published after IQAC and Principal approval"],"src":"video"},{"id":"F46","name":"Select preferred courses","cat":"Staff","logins":["FAC","HOD"],"path":{"FAC":"Functions > Select Preferred Courses","HOD":"Functions > Select Preferred Courses"},"status":"unused","desc":"Screen for recording course preferences. Present in both logins but not used — allocation is done manually off-system.","dup":"preference","ops":["Pick the department","Select subjects","Submit — the department does not use this"],"src":"video"},{"id":"F47","name":"Faculty course preference","cat":"Staff","logins":["HOD"],"path":{"HOD":"Functions > Faculty Course preference"},"status":"unused","desc":"A second preference surface sitting directly beneath Select Preferred Courses in the same menu. Described as a skeleton that departments do not use.","dup":"preference","note":"Overlaps F46 inside one menu — a genuine duplicate.","ops":["A second preference surface beneath Select Preferred Courses; a skeleton, not used"],"src":"video"},{"id":"F48","name":"Staff attendance status","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Functions > Staff Attendance Status"},"status":"live","desc":"Department-wide view of whether staff have recorded attendance.","dup":"attendance-status","ops":["Read whether staff have recorded attendance across the department"],"src":"video"},{"id":"F49","name":"First year attendance status","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Functions > First Year Attendance Status"},"status":"live","desc":"The same compliance report scoped to first-year courses: classes scheduled versus taken, pending attendance entries, and whether IAT-1, CC-1 and CC-2 marks are uploaded.","dup":"attendance-status","note":"Scope variant of F48 in the same menu.","ops":["Read classes scheduled against classes taken per first-year course","See which attendance entries are pending","Check whether IAT-1, CC-1 and CC-2 marks are uploaded","Drill into a faculty member"],"src":"video"},{"id":"F50","name":"Staff indices — API / MPI / CRI","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Functions > Staff Indices"},"status":"live","plate":"hod_indices","desc":"Punctuality measurement per staff member. API = attendance entries made within six days of the class; MPI = punctuality of minor marks entry; CRI = counselling note entries made against entries expected. Published with a glossary of terms.","ops":["Pick a faculty member","Read API, MPI and CRI per course, section and batch","Read the grand result","Read the published glossary of terms","Open the detailed index calculation","Read the per-faculty radar chart"],"src":"video"},{"id":"F51","name":"Late-entry detail log","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Staff Indices > detail"},"status":"live","plate":"hod_latelog","desc":"Per-class audit behind the indices with a late-by-N-days column; a same-day entry leaves the column blank.","ops":["Read each class with the date it was entered","Read the late-by-N-days column","A blank cell means it was entered the same day"],"src":"video"},{"id":"F52","name":"Department subjects — HOD view","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Home"},"status":"live","plate":"hod_subjects","desc":"Semester-wise cards for every subject the department runs, as the HOD landing surface.","ops":["Read semester-wise cards for every subject the department runs","Open a subject"],"src":"video"},{"id":"F53","name":"Department-wise CIE and attendance MIS","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Attendance and CIE Analysis"},"status":"live","desc":"Cross-department MIS including first-year sections, with eligibility finalisation and per-component status chips.","ops":["Pick semester and section, including first-year physics and chemistry cycles","Read eligibility finalisation","Read the per-component status chips"],"src":"video"},{"id":"F54","name":"Unblock attendance","cat":"Attendance","logins":["HOD"],"path":{"HOD":"Functions > Unblock Attendance"},"status":"live","plate":"hod_unblock","desc":"Release a locked attendance entry — per course or Select All for the whole department — so the faculty can enter it late.","dup":"attendance-correction","ops":["Pick one course","Or press Select All for the whole department","Unblock","Edit rights return to the faculty member","No per-student trail"],"src":"video"},{"id":"F55","name":"Attendance change requests","cat":"Attendance","logins":["HOD"],"path":{"HOD":"Functions > Attendance Change Requests"},"status":"live","plate":"hod_attchange","desc":"Approve or reject a faculty request to change a submitted record. Transitions: absent to present, present to absent, and absent to NC (not considered).","dup":"attendance-correction","note":"Second mechanism for the same outcome as F54.","ops":["Read the pending queue — faculty, student and USN, course code and name, class date, requested change","Approve a request","Reject a request","Allow absent to present","Allow present to absent","Allow absent to NC (not considered), used for lateral-entry students who joined late"],"src":"video"},{"id":"F56","name":"Add period logs","cat":"Attendance","logins":["HOD"],"path":{"HOD":"Functions > Add Period Logs"},"status":"live","plate":"hod_addperiod","desc":"Every extra period a faculty member created, surfaced to the HOD with the attendance recorded against it.","dup":"period-logs","ops":["Read every extra period a faculty member created","See the attendance recorded against it"],"src":"video"},{"id":"F57","name":"Delete period logs","cat":"Attendance","logins":["HOD","SPOC"],"path":{"HOD":"Functions > Delete Period Logs","SPOC":"Reports > Period Delete Log Report"},"status":"live","plate":"hod_delperiod","desc":"Remove an added period from the log.","dup":"period-logs","ops":["Delete an added period from the log"],"src":"video"},{"id":"F58","name":"OBE component","cat":"OBE","logins":["HOD"],"path":{"HOD":"Functions > OBE Component"},"status":"live","plate":"hod_co_thr","desc":"The attainment subsystem: CO definition, PO and PSO masters, CO-PO mapping, targets and thresholds, and the attainment chain.","ops":["Pick a course","Read course type, professional-studies class, SEE maximum and examination duration","Move through CO, PO and PSO definition, mapping, targets and attainment"],"src":"video"},{"id":"F59","name":"PO / PSO master","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > PO / PSO"},"status":"live","plate":"hod_po","desc":"Twelve programme outcomes (PO1 to PO12) and three programme specific outcomes (PSO1 to PSO3), each with a title, a full descriptor and an Edit action.","ops":["Read PO1 to PO12 with title and full descriptor","Read PSO1 to PSO3","Edit any outcome"],"src":"both","man":["M19"]},{"id":"F60","name":"Mapping CO to PO / PSO","cat":"OBE","logins":["FAC","HOD"],"path":{"FAC":"Course coordinator page > Mapping PO-CO","HOD":"OBE Component > mapping"},"status":"live","plate":"fac_copo","desc":"Matrix of course outcomes against PO1-PO12 and PSO1-PSO3 with strength 1, 2 or 3 for low, medium and high. Finalised at the BOS and transcribed here.","dup":"co-po-map","ops":["Pick the semester and course","Read the CO rows against PO1-PO12 and PSO1-PSO3","Set strength 1, 2 or 3 for low, medium and high","Leave a pair unmapped","Save","Click Map CO-PO, then Map POs","Click edit","Choose L-1, M-2 or H-3 from the dropdown","Click Update"],"src":"both","man":["M19"]},{"id":"F61","name":"Set target and threshold","cat":"OBE","logins":["FAC","HOD"],"path":{"FAC":"Course coordinator page > OBE threshold","HOD":"OBE Component > Set target"},"status":"live","desc":"Per-CO target and threshold percentage plus the IA and SEE weightage split — 50/50 on every course shown. Several courses had weightage set but no threshold entered.","dup":"obe-threshold","ops":["Set the target level per CO","Set the threshold percentage per CO","Set the IA weightage","Set the SEE weightage","Save","Only ticked subjects enter the OBE calculation"],"src":"both","man":["M19"]},{"id":"F62","name":"CIE attainment","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > CIE attainment"},"status":"live","desc":"Attainment computed from internal marks. Incomplete mid-semester when only IAT-1 and CC-1 exist.","ops":["Read attainment computed from the internal marks","See it flagged incomplete while components are missing"],"src":"both","man":["M19"]},{"id":"F63","name":"SEE attainment","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > SEE attainment"},"status":"live","desc":"Attainment from the semester end examination; empty until results are released.","ops":["Read attainment from the semester end examination","Empty until results are released"],"src":"both","man":["M19"]},{"id":"F64","name":"Final attainment (CO-wise)","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > Final attainment"},"status":"live","desc":"Combines CIE and SEE per course and per PO to give the direct attainment figure.","ops":["Read CIE and SEE combined per course","Read it per PO","Read it CO-wise"],"src":"both","man":["M19"]},{"id":"F65","name":"Indirect attainment entry","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > Final indirect entry"},"status":"live","plate":"hod_survey","desc":"Department-level entry of survey results. Direct and indirect are weighted 80 to 20 in the final attainment.","ops":["Enter department-level survey values","Weighted 20% against 80% direct","Click Indirect Entry Department Level"],"src":"both","man":["M19"]},{"id":"F66","name":"Survey attainment entry","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > Survey Attainment Entry"},"status":"live","desc":"Capture of the programme exit survey and the course end survey that feed the indirect 20 percent.","ops":["Read the survey rows per CO","Enter programme exit survey values","Enter course end survey values","Submit"],"src":"video"},{"id":"F67","name":"OBE / CoE Excel report","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > report"},"status":"live","plate":"hod_coe_xls","desc":"Spreadsheet export carrying PO1-PO12 and PSO columns per course. Generates as incomplete while the semester is running.","ops":["Generate the OBE spreadsheet","Download it with PO1-PO12 and PSO columns per course","Mid-semester it generates as incomplete"],"src":"video"},{"id":"F68","name":"Student feedback report","cat":"Feedback","logins":["FAC","HOD","SPOC"],"path":{"FAC":"Reports > My Feedback","HOD":"Functions > Student Feedback CS","SPOC":"Reports > Feedback Report"},"status":"live","plate":"hod_feedback","desc":"Feedback students submit against each course and its teacher. The faculty sees their own; the HOD sees the department's, published as a formal analysis report per academic session.","dup":"feedback","ops":["Pick the course and academic session","Read the ratings","Read student comments","Open the feedback analysis report for the session"],"src":"video"},{"id":"F69","name":"Result analysis report","cat":"Monitoring","logins":["FAC"],"path":{"FAC":"Reports > Result Analysis Report"},"status":"live","desc":"Course-level result analysis once every component is entered.","ops":["Read course-level result analysis once every component is entered"],"src":"video"},{"id":"F70","name":"View CCM","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Functions > View CCM"},"status":"unused","desc":"Present in the menu; the department does not use it and it was not explained.","ops":["Present in the HOD menu; the department does not use it and it was not explained"],"src":"video"},{"id":"F71","name":"Fetch report","cat":"Monitoring","logins":["FAC","HOD","SPOC","IQAC"],"path":{"FAC":"Top nav > Fetch Report","HOD":"Top nav > Fetch Report","SPOC":"Top nav > Fetch Report","IQAC":"Top nav > Fetch Report"},"status":"live","desc":"Generic report retrieval in the top navigation of both logins. The coordinator equivalent is Fields Report.","dup":"fetch-report","ops":["Retrieve a report from the top navigation"],"src":"video"},{"id":"F72","name":"User manual","cat":"Support","logins":["DC","FAC","HOD","SPOC","IQAC"],"path":{"DC":"Top nav > User Manual","FAC":"Top nav > User Manual","HOD":"Top nav > User Manual","SPOC":"Top nav > User Manual","IQAC":"Top nav > User Manual"},"status":"live","plate":"manual_core","desc":"In-product manual. The coordinator version carries the TERM SETUP ACTIVITIES sheet and downloadable step guides that specify the exact dropdown values for each field.","dup":"user-manual","ops":["Browse the in-product manual","Open the TERM SETUP ACTIVITIES sheet","Download the step guide for each activity","Read the exact dropdown value prescribed for every field"],"src":"video"},{"id":"F73","name":"Report issue to Contineo helpdesk","cat":"Support","logins":["DC","FAC","HOD","SPOC","IQAC","CNS"],"path":{"DC":"Global button","FAC":"Global button","HOD":"Global button","SPOC":"Global button","IQAC":"Global button","CNS":"Global button"},"status":"live","plate":"helpdesk","desc":"Ticket form on every page: login ID and issue title are mandatory; cell number, mail CC, semester, section and batch, course code, course name, USN, URL and description are optional.","dup":"helpdesk","ops":["Enter your login ID (required)","Enter the issue title (required)","Enter your cell number","Enter a mail CC","Enter semester","Enter section and batch","Enter course code","Enter course name","Enter USN","Enter the URL","Describe the issue","Submit the ticket"],"src":"video"},{"id":"F74","name":"Change photo / change password","cat":"Account","logins":["FAC","HOD","SPOC","IQAC"],"path":{"FAC":"Dashboard > profile","HOD":"Dashboard > profile","SPOC":"Dashboard > profile","IQAC":"Dashboard > profile"},"status":"live","desc":"Self-service account actions beneath the profile picture.","dup":"account","ops":["Change the profile photo","Change the password"],"src":"video"},{"id":"F75","name":"Notice banner","cat":"Support","logins":["FAC","HOD"],"path":{"FAC":"Dashboard > NOTICE","HOD":"Dashboard > NOTICE"},"status":"live","desc":"Dashboard notice strip, fed by the coordinator's Notice Board.","dup":"notice","ops":["Read the dashboard notice strip"],"src":"video"},{"id":"F76","name":"My classes","cat":"Teaching","logins":["FAC"],"path":{"FAC":"Dashboard > My Classes"},"status":"live","plate":"fac_home","desc":"One card per course and lab batch showing programme, course, theory or practical, maximum IA marks, code, semester, section, batch, LDPR progress and class progress.","plate2":"fac_courses","ops":["Read one card per course and lab batch","Read programme, course, theory or practical and maximum IA marks","Read code, semester, section and batch","Read the LDPR progress bar","Read the class progress bar","Open the class actions","Verify the rolling timetable against your own copy before the first attendance","Verify the courses you handle — department, semester, section, batch and theory/lab/tutorial","Verify the student list from the take-attendance screen"],"src":"both","man":["M08","M10"],"note":"For an integrated course the login shows what you are entitled to: handle theory and you get both attendance and CIE; handle only the practical and you get attendance alone."},{"id":"F77","name":"Logout","cat":"Account","logins":["DC","FAC","HOD","SPOC","CNS","SP","IQAC"],"path":{"DC":"Top nav","FAC":"Top nav","HOD":"Top nav","SPOC":"Top nav","CNS":"Top nav","SP":"Portal","IQAC":"Top nav"},"status":"live","desc":"Session end. Present in all three navigations.","dup":"logout","ops":["End the session"],"src":"video"},{"id":"F78","name":"Institution View","cat":"Monitoring","logins":["SPOC","IQAC"],"path":{"SPOC":"Functions > Institution View","IQAC":"Functions > Institution View"},"status":"live","desc":"The whole college on one screen: every programme, every department, with the staff who run it and a colour-coded state per department.","ops":["Browse by programme — BE, BCA, MCA, MBA, M.Tech","Open a department","Read the colour legend — pending approval, active section, staff admin, approved","Drill into a section","Open the Poster Status Report","See cross-programme departments"],"src":"video"},{"id":"F79","name":"Dean approval for marks freezing","cat":"Assessment","logins":["SPOC","IQAC"],"path":{"SPOC":"Functions > Dean Approval","IQAC":"Functions > Dean Approval"},"status":"live","desc":"The last gate in a three-stage freeze. The faculty freezes attendance and CIE marks, the HOD freezes next, and only when the SPOC or Principal approves does the data move to the exam server for hall-ticket generation.","ops":["Pick stream, department, semester and section","Read eligibility finalisation per course","Read the component chips — AT1, AT2, CCE1, CCE2, Lab1, Lab2","Approve the freeze","See which courses are still pending","Download the PDF report","Download the Excel report","Read HOD-approval-pending by programme, semester and section","Open a section to see which students are detained","Approve the freeze, which releases the data to the exam server","Dean signs in and clicks COE Approval","Click Approve the List","Approval is semester-wise","The status turns green and reads APPROVED","The Dean can reject an HOD approval before approving, by clicking the red box then Reject","Once the Dean approves, only the Contineo helpdesk can undo it"],"note":"Eligibility checked at the freeze: attendance above 85 percent and CIE above 40 percent. For an integrated course both the theory and the practical component must clear 40 percent separately. The thresholds themselves are set per course in the coordinator's course scheme and in the course coordinator's “bucket setup”.","src":"both","man":["M15"]},{"id":"F80","name":"Update teacher contact","cat":"Staff","logins":["SPOC"],"path":{"SPOC":"Functions > Update Teacher Contact"},"status":"live","desc":"Maintain the staff directory that every other login searches.","ops":["Read teacher name, designation, e-mail, mobile number and faculty ID","Edit a contact row","Publish the change"],"src":"video"},{"id":"F81","name":"Lock CIE events","cat":"Assessment","logins":["SPOC","IQAC"],"path":{"SPOC":"Functions > Lock Cie events","IQAC":"Functions > Lock Cie events"},"status":"live","desc":"Open or close each assessment component, per course, so faculty can or cannot enter marks against it.","ops":["Pick stream, department and semester","Press Continue to list the assigned courses","Toggle AT1, AT2, CCE1, CCE2, Lab1 and Lab2 per course — green open, red locked","Lock or unlock a whole course","Open the CIE Log Report"],"note":"The rule it enforces: a teacher must enter marks within three days of conducting the test. Once three days have elapsed the SPOC locks the event and no further entry is possible.","src":"video"},{"id":"F82","name":"Enable / disable feedback","cat":"Feedback","logins":["SPOC","IQAC"],"path":{"SPOC":"Functions > Enable/Disable Feedback","IQAC":"Functions > Enable/Disable Feedback"},"status":"live","desc":"Open the student feedback window per department and semester.","ops":["Pick a department","Toggle each semester on or off","Applies to every section in that semester"],"src":"video"},{"id":"F83","name":"Send CIE SMS","cat":"Communication","logins":["SPOC"],"path":{"SPOC":"Functions > Send CIE SMS"},"status":"live","desc":"Bulk SMS to parents about internal marks.","ops":["Pick stream, department, semester, section and role","Choose the recipient role — student or parent","Preview the generated message per student","Select all recipients or pick individually","Send","Close without sending"],"src":"video"},{"id":"F84","name":"Send attendance SMS","cat":"Communication","logins":["SPOC"],"path":{"SPOC":"Functions > Send Attendance SMS"},"status":"live","desc":"Bulk SMS to parents about attendance shortfall, generated from a date range.","ops":["Pick stream, department and semester","Set a start and end date","Generate the list","Read total, elapsed, marked and pending classes per course","Read the message built for each student","Select all or pick individually","Send SMS"],"src":"video"},{"id":"F85","name":"Enable / disable course registration","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Functions > Enable/Disable Course Registration"},"status":"live","desc":"Open or close the self-registration window, department by department and semester by semester.","ops":["Pick a programme","Toggle each semester on or off per department","First year and every departmental semester are controlled separately"],"src":"video"},{"id":"F86","name":"Attendance dashboard","cat":"Monitoring","logins":["SPOC","IQAC"],"path":{"SPOC":"Functions > Attendance Dashboard","IQAC":"Functions > Attendance Dashboard"},"status":"live","desc":"College-wide attendance headline: classes held, marked, pending and the overall percentage, over any date range.","ops":["Open today's live view","Pick a custom date range","Filter by department","Filter by semester","Filter by section","Read the five headline figures","Open the Attendance Summary Dashboard","Open the Daily Attendance Report"],"src":"video"},{"id":"F87","name":"Student details search and export","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Top nav > Student"},"status":"live","desc":"The admission record in full, with a column picker, for export and verification.","ops":["Pick stream, department, semester, section and student","Choose which fields to output — Aadhaar number, application number, caste, city, country, domicile","Add parent fields — father name, occupation, qualification, annual income, business contact, e-mail","Add SSLC, PUC, Diploma and Degree academic blocks","Add admission fields — entrance rank, admission order number and date, previous USN, hostel details","Export the result"],"src":"video"},{"id":"F88","name":"All subjects — Principal / Dean view","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Institution View > All Subjects"},"status":"live","desc":"Every subject a programme runs in a semester, as cards, each opening straight into its analysis.","ops":["Pick a programme and semester","Read each subject with its handling faculty","Open CIE Analysis for a subject","Open Attendance for a subject"],"src":"video"},{"id":"F89","name":"Course assignment approval","cat":"Courses","logins":["SPOC"],"path":{"SPOC":"Institution View > Assign Courses"},"status":"live","desc":"The college-level sign-off on what each department has set up for the term.","ops":["Pick a programme","Open a department and semester","Read the course assignment","Save and approve","Approve a semester outright"],"src":"video"},{"id":"F90","name":"Attendance and CIE eligibility report","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Reports > Attendance & CIE Eligibility Report"},"status":"live","desc":"The report the freeze depends on: who is eligible to sit the semester end examination.","ops":["Pick stream, department, semester and section","Generate","Export","Open the companion User Manual for Freezing"],"src":"video"},{"id":"F91","name":"Course registration report","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Reports > Course Reg."},"status":"live","desc":"Registered versus not-registered counts for the academic year, by programme and semester.","ops":["Pick the academic year","Read registered and not-registered totals per programme","Drill to a semester","Export to Excel"],"src":"video"},{"id":"F92","name":"SMS status report","cat":"Communication","logins":["SPOC"],"path":{"SPOC":"Reports > SMS Status Report"},"status":"live","desc":"What was sent, to whom, and whether it was delivered.","ops":["Set a start and end date","Pick stream, department and semester","Pick the SMS type","Read USN, name, department, semester, mobile and the message body","Read send status and send date","Export to Excel or PDF"],"src":"video"},{"id":"F93","name":"Staff attendance lag report","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Reports > Staff Attendance Lag Report"},"status":"live","desc":"Faculty-wise view of classes for which attendance was never entered.","ops":["Set a date range","Pick department, semester and section","Generate the report","Read faculty name, semester, section, batch, subject and the count of classes not entered","Read the separate block for faculty from other departments"],"src":"video"},{"id":"F94","name":"Deactivated students report","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Reports > Deactivated Students Report"},"status":"live","desc":"Students who have been taken off the active roll.","ops":["Pick stream and department","Generate","Export"],"src":"video"},{"id":"F95","name":"Change branch report","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Reports > Change Branch Report"},"status":"live","desc":"Students who moved between branches.","ops":["Pick stream and department","Generate","Export"],"src":"video"},{"id":"F96","name":"Gender-wise registration report","cat":"Students","logins":["SPOC"],"path":{"SPOC":"Reports > Genderwise Registration Report"},"status":"live","desc":"Registration split by gender, for statutory returns.","ops":["Pick the scope","Generate","Export"],"src":"video"},{"id":"F97","name":"Exam details report","cat":"Assessment","logins":["SPOC"],"path":{"SPOC":"Reports > Exam Details Report"},"status":"live","desc":"Examination-side detail pulled back into SIMS.","ops":["Pick the scope","Generate","Export"],"src":"video"},{"id":"F98","name":"CIE marks entry status report","cat":"Assessment","logins":["SPOC"],"path":{"SPOC":"Reports > CIE Marks Entry Status Report"},"status":"live","desc":"Which courses have complete marks and which are still open, by department and semester.","ops":["Pick department and semester","Read registered counts against completed-entry counts per course","Export to Excel"],"src":"video"},{"id":"F99","name":"LDPR topics pending status","cat":"Teaching","logins":["SPOC"],"path":{"SPOC":"Reports > LDPR Topics Pending Status"},"status":"live","desc":"Syllabus topics not yet recorded as delivered.","ops":["Pick the scope","Generate","Export"],"src":"video"},{"id":"F100","name":"Section result analysis report","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Reports > Section Result Analysis Report"},"status":"live","desc":"Section-level result analysis across the college.","ops":["Pick the scope","Generate","Export"],"src":"video"},{"id":"F101","name":"Fee due report","cat":"Finance","logins":["SPOC"],"path":{"SPOC":"Reports > Fee Due Report"},"status":"live","desc":"Outstanding fees by stream, department, semester and section.","ops":["Pick stream, department, section and semester","Generate the due list","Read student name, USN and department","Download the report"],"src":"video"},{"id":"F102","name":"Feedback status and pending feedback reports","cat":"Feedback","logins":["SPOC"],"path":{"SPOC":"Reports > Feedback Status / Pending Feedback"},"status":"live","desc":"Who has given course feedback and who has not.","ops":["Pick stream, department, semester, section and the feedback round","Generate the course-wise feedback report","Generate the consolidated feedback report","Open the Feedbacks Not Given list with USN, subject and faculty","Open the Student Feedback Analysis Report for the session"],"src":"video"},{"id":"F103","name":"Faculty-wise attendance view","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Reports > Faculty Wise Attendance View"},"status":"live","desc":"Per-faculty attendance entry status across a date range, including staff teaching into other departments.","ops":["Set start and end dates","Pick department, semester and section","Generate","Read the count of classes for which attendance was not entered"],"src":"video"},{"id":"F104","name":"Statement of cumulative classes taken","cat":"Monitoring","logins":["SPOC"],"path":{"SPOC":"Reports > Course Scheme Report"},"status":"live","desc":"The signed statement of classes taken and portion covered, per subject and staff member.","ops":["Pick department and semester","Read section, subject, code, staff, batch","Read classes taken and portion covered","Print for signature"],"src":"video"},{"id":"F105","name":"Counsellor assignment","cat":"Counselling","logins":["CNS"],"path":{"CNS":"Home"},"status":"live","desc":"Where the mentor-to-student mapping is actually made, programme by programme.","ops":["Browse programmes and departments","Open a department","Read each faculty card with its current student count","Press assign Students","Press un-assign Students","Pick a semester and tick students into a counsellor","Read the total assigned per counsellor"],"note":"How many mentees a faculty member carries is decided manually by the college counselling coordinator; the software applies no rule and enforces no cap.","src":"video"},{"id":"F106","name":"Student assigned to proctor list","cat":"Counselling","logins":["CNS"],"path":{"CNS":"Reports > Student Assigned to Proctor List"},"status":"live","desc":"The full mapping as a spreadsheet: counsellor, student, USN, semester.","ops":["Pick stream and department","Generate","Export to Excel"],"note":"In practice the not-assigned list is mostly students who have already left, so it doubles as a stale-record report.","src":"video"},{"id":"F107","name":"Student not assigned to proctor list","cat":"Counselling","logins":["CNS"],"path":{"CNS":"Reports > Student Not Assigned to Proctor List"},"status":"live","desc":"The exception list — students with no mentor, which is the gap the counsellor login exists to close.","ops":["Pick stream and department","Press Report","Export"],"src":"video"},{"id":"F108","name":"Student portal sign-in","cat":"Account","logins":["SP"],"path":{"SP":"ncetparents.contineo.in"},"status":"live","desc":"A separate portal on its own domain. The student or the parent signs in with the USN as the username and the student's date of birth as the password.","ops":["Enter the USN as username","Enter the password","Use Forgot Password","Validate the one-time password sent to the registered mobile","Read the notice board on the sign-in page","Sign in with the USN as username","Sign in with the student's date of birth as password","Staff look the date of birth up in the student profile when assisting a parent"],"note":"Credentials are USN plus date of birth — both are printed on routine college paperwork and the date of birth is visible to staff in the student profile. Worth raising as an authentication design question before this is rebuilt.","src":"video"},{"id":"F109","name":"Student dashboard","cat":"Monitoring","logins":["SP"],"path":{"SP":"Portal > Home"},"status":"live","desc":"The student's own headline: CIE by course as a bar chart and attendance as a gauge, with a last-updated stamp.","ops":["Read the CIE chart per course","Read the attendance gauge and percentage","Read programme, semester and section","Check the last-updated time"],"src":"video"},{"id":"F110","name":"Course registration, CIE and attendance status","cat":"Students","logins":["SP"],"path":{"SP":"Portal > Course registration"},"status":"live","desc":"One row per registered course, each opening the lesson plan, the attendance log or the marks.","ops":["Read course code and name","Open NOTES for the lesson plan","Open ATTENDANCE for that course","Open CIE for that course"],"src":"video"},{"id":"F111","name":"Attendance detail","cat":"Attendance","logins":["SP"],"path":{"SP":"Portal > Attendance"},"status":"live","desc":"Every class, with the date and time it was held and whether the student was there.","ops":["Switch between the present list and the absent list","Read date, time and status per class","Read the present and absent counts","Read the attendance status banner"],"src":"video"},{"id":"F112","name":"CIE detail","cat":"Assessment","logins":["SP"],"path":{"SP":"Portal > CIE"},"status":"live","desc":"Marks obtained against maximum, per component, with the handling faculty named.","ops":["Read the marks-obtained versus maximum chart","Read AT1, AT2, CCE1, CCE2, Lab1, Lab2, final IA and attendance","Read the internal assessment summary and the faculty name"],"src":"video"},{"id":"F113","name":"Profile viewing","cat":"Students","logins":["SP"],"path":{"SP":"Portal > Profile"},"status":"live","desc":"The student's own record, read-only.","ops":["Read name, USN, department, section and category","Read religion, rural or urban, Aadhaar number and e-mail","Read permanent and correspondence addresses","Read parent details","Read SSLC and PUC subject marks"],"src":"video"},{"id":"F114","name":"Fee details and online payment","cat":"Finance","logins":["SP"],"path":{"SP":"Portal > Fees"},"status":"live","desc":"What is owed, what has been paid, and the means to pay the rest.","ops":["Read balance for previous years","Read the current year by fee head","Read current demand, paid so far, transaction pending and balance","Enter an amount under Paying Now","Pay online","Read the payment-updated list with challan ID, amount, mode and date","Download a receipt","Open previous-year receipts"],"src":"video"},{"id":"F115","name":"Exam history","cat":"Assessment","logins":["SP"],"path":{"SP":"Portal > Exam History"},"status":"live","desc":"Every term already completed, with credits and grades.","ops":["Read credits registered, credits earned and SGPA per term","Read course code, subject, credits registered and earned, GPA and grade","Note the provisional-results disclaimer"],"src":"video"},{"id":"F116","name":"Exam forms","cat":"Assessment","logins":["SP"],"path":{"SP":"Portal > Exam form"},"status":"live","desc":"The student-initiated examination requests.","ops":["Apply for revaluation","Apply for challenge revaluation","Apply for photocopy","Apply for disclosure of the answer script","Apply for make-up","Apply for ODE"],"note":"The portal only captures the request. Revaluation itself is manual: the examination section pulls the answer booklet and calls the evaluators.","src":"video"},{"id":"F117","name":"Give course feedback","cat":"Feedback","logins":["SP"],"path":{"SP":"Portal > Course Feedback"},"status":"live","desc":"Where the feedback that faculty, HOD and SPOC later read is actually entered. Two kinds run: feedback on the teaching-learning process, and the course exit survey on the course itself.","ops":["See a Give Feedback card per course and faculty","Submit feedback for a course","See the completed-feedback list","Open the feedback user manual","Give feedback only for registered courses","See non-registered electives listed but not clickable","See OK against a course once feedback is submitted"],"note":"A student only gives feedback for courses they are registered for; other electives appear but stay inert. Once submitted the card shows OK and cannot be opened again.","src":"video"},{"id":"F118","name":"Course exit survey","cat":"OBE","logins":["SP"],"path":{"SP":"Portal > Course Exit Survey"},"status":"live","desc":"The course-level survey that feeds indirect attainment. The teacher enables it at the end of the semester, and it then appears in the student portal beside the teaching feedback.","ops":["Named in the official Student/Parent portal list; the screen was not opened during the walkthrough","Appears once the teacher enables it","Submit the survey per course","Feeds the indirect 20 percent of the OBE attainment calculation"],"note":"Pairs with the programme exit survey the HOD enters under OBE Component; together they are the 20 percent indirect share of final attainment.","src":"video"},{"id":"F119","name":"Grievance redressal","cat":"Support","logins":["SP"],"path":{"SP":"Portal > Grievance Redressal"},"status":"live","desc":"Student-raised complaints, gated by a one-time password sent to the mobile number already on record.","ops":["Named in the official Student/Parent portal list; the screen was not opened during the walkthrough","Press the grievance option","Receive an OTP on the registered mobile","Enter the OTP to verify","Record the complaint","Cancel without submitting"],"src":"video"},{"id":"F120","name":"Counselling details (student view)","cat":"Counselling","logins":["SP"],"path":{"SP":"Portal > Counselling Details"},"status":"live","desc":"The student's side of the mentoring record — the same comments the faculty wrote.","ops":["Read the assigned proctor","Read date, proctor, comment and follow-up date"],"src":"video"},{"id":"F121","name":"View course registration","cat":"Students","logins":["SP"],"path":{"SP":"Portal > Course Registration"},"status":"live","desc":"What the student is registered for this term, and the credit total it adds up to.","ops":["Read name, USN, roll number, department and total credits","Read core courses with code, subject, credits and registered status","Read elective and professional-elective courses separately","Once any registered course is frozen, the Edit option disappears"],"src":"both","man":["M04"]},{"id":"F122","name":"Progress report","cat":"Monitoring","logins":["SP","FAC"],"path":{"SP":"Portal > Progress Report","FAC":"Counselling > Consolidated Report"},"status":"live","desc":"The printable per-student sheet that pairs attendance with internal marks, course by course.","ops":["Read USN, name, academic year, branch, section and cycle","Read the mentor name and department","Read attendance and internal marks per course","Read the eligibility footnote — 85 percent attendance and 40 percent CIE to sit the SEE"],"src":"video"},{"id":"F123","name":"Add vision / mission, PO, PSO","cat":"OBE","logins":["IQAC","DC"],"path":{"IQAC":"Functions > Add Vision/Mission, PO, PSO","DC":"Top nav > Add Vision/Mission"},"status":"live","desc":"The only function unique to the IQAC login, and the reason the login exists: the vision and mission statements and the programme outcome definitions that the whole OBE chain is measured against.","ops":["Pick a programme","Open a department","Add or edit the vision statement","Add or edit the mission statement","Define the programme outcomes","Define the programme specific outcomes","Publish to the departments","Add the vision and mission description and save","Add programme outcomes one by one","Choose the number of PSOs, then describe each"],"note":"The presenter described the IQAC login as “very limited” — everything else in its menu is a read-only subset of SPOC. The OBE manual shows this in the Department Coordinator login as well, which the walkthroughs never did — worth confirming which login owns it.","src":"both","man":["M19"]},{"id":"F124","name":"Instance and term switcher","cat":"Setup","logins":["DC","FAC","HOD","SPOC","CNS","IQAC"],"path":{"DC":"Sign-in page","FAC":"Sign-in page","HOD":"Sign-in page","SPOC":"Sign-in page","CNS":"Sign-in page","IQAC":"Sign-in page"},"status":"live","desc":"Each academic term is a separate instance, created by the Contineo backend when the college sends that term's calendar of events. Three instances run per academic year — odd, even and supplementary.","ops":["Choose Current Instance","Choose Old Instance","Choose Supply Terms","Pick an archived term — odd and even terms from 2022 onward","Note that a term's data stays in its own instance"],"note":"This is why the coordinator login starts each term empty, and why the sign-in page offers Old Instance, Current Instance and Supply Terms as separate doors.","src":"video"},{"id":"F125","name":"Configure course — CIE bucket setup","cat":"Assessment","logins":["DC"],"path":{"DC":"Course list > Configure Course"},"status":"live","src":"manual","man":["M11"],"desc":"The entry point to internal-assessment configuration. A bucket is a set of related assessment events with one relationship between them; the course's final CIE is an equation over its buckets. Set once at course level, it applies to every section of that semester.","ops":["Open the department course list","Find the course (Ctrl+F)","Click Configure Course","Choose the number of buckets from the dropdown","Enter a bucket code — A, B, C — used later in the equation","Enter the bucket name shown in the faculty login","Enter the three-letter bucket short name","Enter the number of events in the bucket","Choose the event relation — Sum / Sum of highest two / Average of all events / Highest of all / Average of best four","Enter actual CIE marks, never above the assessment maximum","Enter bucket maximum marks, matching actual CIE marks","Choose rounding — No round / Round / Ceil / Floor","Set the bucket sequence — Theory or Lab (always Lab for an integrated course's lab bucket)","Save"],"note":"Worked example from the manual: bucket A = IA1, IA2, IA3 related by sum of highest two (40 marks); bucket B = one assignment (10 marks); final CIE = A+B = 50."},{"id":"F126","name":"Set event","cat":"Assessment","logins":["DC"],"path":{"DC":"Configure Course > Set Event"},"status":"live","src":"manual","man":["M11"],"desc":"Each event inside a bucket is configured separately: what it was conducted out of, what it counts for, which question-paper regime governs it and how its marks round.","ops":["Click Set Event against a bucket","Enter QP maximum marks — what the test was conducted out of","Enter marks — what it actually counts for in the scheme","Choose the QP option — Set QP at global level only (coordinator sets it for every section)","Choose Set QP at evaluator level only (faculty set it per section and batch)","Choose Set global level with override QP (coordinator sets it, faculty may override per section)","Avoid Has no QP pattern — it stops CO attainment and drops the course out of OBE entirely","Choose downgrade / upgrade / rounding","Save","Watch the event turn from red to green once complete","Edit an event — but never its actual CIE marks or bucket marks, which need a helpdesk request"],"note":"“Has no QP pattern” silently excludes the course from the OBE attainment calculation. The manual warns against it twice and asks colleges to pick one of the other three even for seminars and internships."},{"id":"F127","name":"Final CIE equation","cat":"Assessment","logins":["DC"],"path":{"DC":"Configure Course > equation"},"status":"live","src":"manual","man":["M11"],"desc":"The arithmetic that turns bucket totals into the single CIE figure — typed as an expression over the bucket codes, validated, then saved.","ops":["Type the equation over the bucket codes, e.g. A+B or A+B+C","Click Validate","Choose the final rounding — Round / Ceil / no rounding","Click Save this equation","A missing or invalid equation surfaces later as “Error in equation” when the HOD tries to approve"]},{"id":"F128","name":"Copy CIE configuration to other courses","cat":"Assessment","logins":["DC"],"path":{"DC":"Configure Course > Select Course > Copy"},"status":"live","src":"manual","man":["M11"],"desc":"Replicate a finished bucket-and-event configuration across courses that share the same assessment scheme, instead of rebuilding it each time.","ops":["Click Select Course","Tick every course that shares the scheme","Click Copy","Confirm each prompt with OK"]},{"id":"F129","name":"Delete bucket","cat":"Assessment","logins":["DC"],"path":{"DC":"Configure Course > Delete Bucket"},"status":"live","src":"manual","man":["M11"],"desc":"Undo a configuration started with the wrong number of buckets. The only self-service correction in the CIE setup — everything else needs the helpdesk.","ops":["Click Delete Bucket","Rebuild the configuration with the correct bucket count"]},{"id":"F130","name":"QP template and unit policy","cat":"Assessment","logins":["DC","FAC"],"path":{"DC":"View / Add new QP template","FAC":"Click here to set your QP > Add New Unit Policy"},"status":"live","src":"manual","man":["M13"],"dup":"qp-template","desc":"Reusable question-paper shapes. A unit policy says “answer 1 of 2 for 17 marks”; a template is a named set of unit policies with a duration and a maximum.","ops":["Check the existing unit policies before creating anything — reuse beats duplication","Click Add New Unit Policy","Choose the number of units","Enter the unit description, e.g. Answer 1 out of 2","Enter total questions in the unit","Enter how many questions to attempt","Enter the unit marks","Submit","Enter the template name","Enter duration in minutes","Enter maximum marks","Enter a template description","Tick the unit policies that make up the template","Click Create","View the created template"],"note":"The manual's worked example: three units of “answer 1 of 2” at 17 + 17 + 16 = 50 marks. For lab and project courses it insists on a single question, answer 1 out of 1, and no sub-questions."},{"id":"F131","name":"Set QP pattern at global level","cat":"Assessment","logins":["DC"],"path":{"DC":"Add Course > View All Courses > Set QP Pattern"},"status":"live","src":"manual","man":["M12"],"dup":"qp-setup","desc":"The coordinator's copy of the question-paper setup, applied to every section of a course at once. Without it, faculty cannot enter CIE marks at all.","ops":["Click Add Course","Click View All Courses","Click Set QP Pattern against the course","Click “Click here to set your QP”","Choose QP Based for theory","Choose Parameter Based for lab and practical","Choose Rubrics Based for project and seminar","Click Next","Select the template matching the CIE maximum marks","Click Setup"],"note":"Stated flatly in the manual: without QP setup the faculty marks-entry screen stays closed. This is the step that most often blocks a term."},{"id":"F132","name":"Approve QP / QP discard","cat":"Assessment","logins":["DC","FAC"],"path":{"DC":"Set QP Pattern > Approve It","FAC":"Set QP > Approve It"},"status":"live","src":"manual","man":["M12"],"dup":"qp-setup","desc":"A question paper must be approved before marks can be entered against it. Approval is one-way — changing an approved paper means discarding it and starting again.","ops":["Declare whether the question has sub-questions","Choose how many sub-questions","Enter the question number","Enter maximum marks","Choose the Bloom's level","Choose the CO","Submit","Click Approve It","Click OK — the Setup link turns from red to green","Click QP Discard to scrap an approved paper and redo it"],"note":"The colour code is the whole status model: grey Setup = nothing set, red = set but unapproved, green = approved. In the faculty marks screen a black NE means the QP is set but not approved; a blue NE means it is approved and waiting for marks."},{"id":"F133","name":"Add new teacher","cat":"Staff","logins":["DC"],"path":{"DC":"Teacher > Add New Teacher"},"status":"live","src":"manual","man":["M06"],"desc":"Create a record for a newly joined faculty member, including whether they are an HOD. The username is their email address; they set their own password through the forgot-password link.","ops":["Search the teacher first to avoid a duplicate","Click Add New Teacher","Enter the faculty details","Set Is HOD to Yes for a head of department","Click Save & Continue","Tell the new faculty member to set a password via the forgot-password link on the sign-in page"],"note":"The manual asks coordinators to pass this on: nobody is notified automatically when their account is created."},{"id":"F134","name":"Change of department","cat":"Staff","logins":["DC"],"path":{"DC":"Teacher > Change of Department"},"status":"live","src":"manual","man":["M06"],"desc":"Attach one faculty member to several departments — how a teacher ends up handling an open elective outside their own department.","ops":["Click Change of Department","Tick the additional department","Never untick the existing department — it detaches their current courses","Tick Is HOD if they head that department","Click Update"]},{"id":"F135","name":"Student data update","cat":"Students","logins":["DC"],"path":{"DC":"Top nav > Student Data"},"status":"live","src":"manual","man":["M18"],"desc":"Bulk maintenance of the student master: filter down to a cohort, then correct records one at a time or save the whole list at once.","ops":["Click Student Data","Set the filters","Click Submit","Edit one student and click Save","Edit many students and click Save All at the foot of the list"]},{"id":"F136","name":"Change USN","cat":"Students","logins":["DC"],"path":{"DC":"Assign Course > Change USN"},"status":"listed","src":"manual","man":["M03"],"desc":"Correct a student's university seat number. Visible as its own button in the coordinator's course panel; not demonstrated in any walkthrough.","ops":["Open the Change USN button from the Assign Course panel"]},{"id":"F137","name":"Unassigned backlog students","cat":"Students","logins":["DC"],"path":{"DC":"Assign Course > Unassigned Backlog Students"},"status":"live","src":"manual","man":["M14"],"desc":"The step that puts a re-registered backlog student into a section. Skip it and the student is invisible to the faculty taking attendance — and the HOD's Approve button stays grey.","ops":["Click Unassigned Backlog Students","Choose the section from the dropdown","Click Save All"],"note":"Named explicitly in three separate manuals as the cause of a missing student, and in the freezing manual as a condition that blocks HOD approval outright."},{"id":"F138","name":"Backlog course registration","cat":"Students","logins":["DC"],"path":{"DC":"Student > Registration Data > Re-registration"},"status":"live","src":"manual","man":["M14"],"desc":"Registering a student for a course they failed in an earlier semester. The course is assigned to the semester it belongs to, never the student's current one.","ops":["Assign the backlog course to the semester it originally belonged to","Search the student by USN","Open Registration Data","Click Edit","Tick the backlog course","Always choose Re-registration, never fresh registration","Submit","Read back the total registered credits","Make any changes before freezing — afterwards Edit is gone"]},{"id":"F139","name":"View class committee coordinator and members","cat":"Monitoring","logins":["DC"],"path":{"DC":"Assign Course > View Class Committee Coordinator & Members"},"status":"listed","src":"manual","man":["M03"],"desc":"The class committee for a section. Present as its own button in the coordinator's panel; never opened in a walkthrough.","ops":["Open the class committee view from the Assign Course panel"]},{"id":"F140","name":"Upload structure","cat":"Setup","logins":["DC"],"path":{"DC":"Assign Course > Upload Structure"},"status":"listed","src":"manual","man":["M03"],"desc":"Bulk upload of the course structure, as an alternative to creating courses one at a time. Visible in the coordinator's panel; never demonstrated.","ops":["Open Upload Structure from the Assign Course panel"]},{"id":"F141","name":"Elective group and registration limit","cat":"Courses","logins":["DC"],"path":{"DC":"Assign Course > Set Parameters > elective"},"status":"live","src":"manual","man":["M02"],"desc":"Electives are grouped so a student picks one course from a group, and each carries a cap on how many students may register.","ops":["Choose an existing elective group from the dropdown","Choose New Elective Group to create one","Name the group, e.g. A","Set the student registration limit per the scheme","Set Need Batches to Yes — compulsory for an integrated elective"]},{"id":"F142","name":"Faculty freeze — attendance and marks","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > Freeze attendance & marks"},"status":"live","src":"manual","man":["M15"],"dup":"freeze","desc":"The first gate of the freeze chain. Once a faculty member freezes, they lose edit rights on their own data — only the HOD can give them back.","ops":["Enter every pending attendance and CIE mark first","Make any corrections before freezing","Download and verify the reports first","Verify student photographs first","Resolve every NE — enter the mark or mark the student absent","Click Freeze attendance & marks once every event has marks","For a course with attendance but no CIE, freeze from the view-attendance page instead"],"note":"The freeze button stays disabled until marks exist for every configured event. If it is pressed by mistake, only the HOD can unfreeze."},{"id":"F143","name":"Consolidated CIE and attendance report","cat":"Assessment","logins":["FAC"],"path":{"FAC":"My Classes > view > Consolidated CIE and Attendance Report"},"status":"live","src":"manual","man":["M15"],"desc":"The pre-freeze check: every student's attendance and CIE eligibility on one sheet, so the faculty can see who is detained before the data is locked.","ops":["Click view under IA","Click Consolidated CIE and Attendance Report","Check each student's attendance eligibility","Check each student's CIE eligibility","Check theory and practical separately for an integrated course"]},{"id":"F144","name":"HOD freeze approval","cat":"Assessment","logins":["HOD"],"path":{"HOD":"Staff Attendance Status > Approve"},"status":"live","src":"manual","man":["M15"],"dup":"freeze","desc":"The second gate. Semester and section wise, and only possible once every faculty member on that section has frozen.","ops":["Click Staff Attendance Status","Open the Final CIE & Attendance report and verify eligibility","Click Approve — grey until every faculty member has frozen, then green","Approve per semester and per section","For an open elective, wait for the offering department to freeze first"],"note":"Four things keep the Approve button grey: a faculty member has not frozen; a course has no CIE configuration (shows “Error in equation”); an open elective has not been frozen by the offering department; a backlog student is still unassigned to a section."},{"id":"F145","name":"Final CIE and attendance report","cat":"Monitoring","logins":["HOD"],"path":{"HOD":"Staff Attendance Status > Final CIE & Attendance report"},"status":"live","src":"manual","man":["M15"],"desc":"The HOD's equivalent of the faculty consolidated report — student-wise eligibility per course, read before approving the freeze.","ops":["Open the report from Staff Attendance Status","Read eligibility student-wise for each course","Verify before approving"]},{"id":"F146","name":"Reject faculty freeze","cat":"Assessment","logins":["HOD"],"path":{"HOD":"Staff Attendance Status > reject"},"status":"live","src":"manual","man":["M15"],"desc":"Send a frozen section back to the faculty member for correction. Possible only before the HOD's own approval — afterwards the chain has to be unwound from above.","ops":["Reject a faculty freeze before approving","Return edit rights to the faculty member","After HOD approval, only the Dean can reject","After Dean approval, only the Contineo helpdesk can"],"note":"The escalation ladder is the real constraint: faculty mistake → HOD, HOD mistake → Dean/COE, Dean mistake → vendor helpdesk."},{"id":"F147","name":"Add topic (LDPR module)","cat":"Teaching","logins":["DC","FAC"],"path":{"DC":"Course list > Add Topics","FAC":"My Classes > Add Topic"},"status":"live","src":"manual","man":["M16"],"dup":"ldpr-topic","desc":"Declaring the syllabus a course will be taught against. Either login can create it, and where several faculty share a course, one person's topics serve everybody.","ops":["Open the course and click Add Topics","Choose the number of topics","Enter each topic name — the module list is offered by default","Enter the topic description","Add a module if one is missing","Click Save Topics","Any one of several faculty on a course may add them; the rest inherit them","The coordinator can edit topics after the fact"]},{"id":"F148","name":"Non-topic LDPR entry","cat":"Teaching","logins":["FAC"],"path":{"FAC":"Mark LDPR > is Non Topic"},"status":"live","src":"manual","man":["M16"],"desc":"Recording a class that taught nothing from the syllabus — a revision hour, a test, a guest session — so the diary stays complete without inflating syllabus coverage.","ops":["Tick “is Non Topic”","Enter what the class was","Add a comment","Click Save Topics","It appears in View LDPR marked as non-topic"]},{"id":"F149","name":"Reset LDPR","cat":"Teaching","logins":["FAC"],"path":{"FAC":"View LDPR > reset"},"status":"live","src":"manual","man":["M16"],"desc":"Clear every progress entry for a course and start the diary again from the beginning.","ops":["Open View LDPR","Reset the entry from the beginning"]},{"id":"F150","name":"Set ISA events","cat":"OBE","logins":["HOD","FAC"],"path":{"HOD":"Course coordinator page > Set ISA events","FAC":"Course coordinator page > Set ISA events"},"status":"live","src":"manual","man":["M19"],"desc":"Declaring how many internal assessment events a course runs, which is what the attainment engine later reads marks from.","ops":["Click Set ISA events","Configure the number of ISA events","Click an event to view the question paper already set against it"]},{"id":"F151","name":"Correlation page","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > Correlation"},"status":"live","src":"manual","man":["M19"],"desc":"The correlation view inside the OBE chain, sitting between threshold setting and attainment.","ops":["Open the correlation page from the OBE activities list"]},{"id":"F152","name":"OBE report","cat":"OBE","logins":["HOD"],"path":{"HOD":"OBE Component > OBE Report"},"status":"live","src":"manual","man":["M19"],"desc":"The consolidated outcome-based-education report, produced once direct and indirect attainment are both in.","ops":["Generate the OBE report","Read the CO-wise final attainment report","Read the ISA attainment summary","Read the ESA attainment"]},{"id":"F153","name":"Forgot password","cat":"Account","logins":["DC","FAC","HOD","SPOC","CNS","IQAC"],"path":{"FAC":"Sign-in page > Forgot Password"},"status":"live","src":"manual","man":["M10","M19"],"desc":"Self-service password reset from the sign-in page — available to faculty, but not to coordinators, who must email the vendor helpdesk instead.","ops":["Click Forgot Password on the sign-in page","Set a new password with upper case, lower case and a special character","Faculty: self-service","Department coordinator: email the Contineo helpdesk instead","Three wrong attempts block the login entirely and need a helpdesk request"],"note":"Asymmetric by design: the faculty reset is self-service, the coordinator reset is a support ticket. Every one of the nineteen manuals repeats this on its login page."},{"id":"F154","name":"Forced password change on first sign-in","cat":"Account","logins":["DC","FAC","HOD","SPOC","CNS","IQAC"],"path":{"FAC":"Sign-in > first login"},"status":"live","src":"manual","man":["M10"],"desc":"A new account cannot be used until its password is changed; the system forces it at first sign-in.","ops":["Sign in with the issued credentials","Enter a new password containing upper case, lower case and a special character","Submit"]}],"duplicates":[{"key":"timetable-view","label":"Timetable viewing","ids":["F15"],"logins":["DC","FAC","HOD","SP"],"note":"Four surfaces for one grid — Verify Timetable, the faculty Rolling Timetable, the HOD View Timetable and the student portal's week view."},{"key":"teacher-lookup","label":"Teacher lookup","ids":["F21"],"logins":["DC","HOD","SPOC","IQAC"],"note":"Coordinator Teacher tab plus Teacher Search in three more logins."},{"key":"assign-teacher","label":"Assign teacher to course","ids":["F22"],"logins":["DC","HOD"],"note":"Term-setup sheet says coordinator; the live menu says HOD. Contradiction raised in session."},{"key":"course-coordinator","label":"Course coordinator page","ids":["F25"],"logins":["FAC","HOD"],"note":"Identical menu entry at the top of both Functions menus."},{"key":"attendance-cie","label":"Attendance and CIE Analysis","ids":["F30"],"logins":["FAC","HOD","SPOC","IQAC"],"note":"The same menu entry, same label, in four logins — only the scope changes."},{"key":"cie-analysis","label":"Course CIE analysis","ids":["F31"],"logins":["FAC","HOD"],"note":"Reached from the faculty report button and from the HOD analysis drill-down."},{"key":"counselling","label":"Counselling","ids":["F42","F43","F105","F120"],"logins":["FAC","HOD","SPOC","CNS","SP"],"note":"Five surfaces: the faculty writes the note, the HOD oversees, the SPOC reports on it, the Counsellor login owns the mapping, and the student reads the same comment back."},{"key":"student-record","label":"Student record","ids":["F44","F87","F113"],"logins":["DC","FAC","HOD","SPOC","CNS","SP"],"note":"Six logins reach a student record; SPOC adds field-level export and the portal shows the student their own."},{"key":"calendar","label":"Calendar of events","ids":["F45"],"logins":["FAC","HOD","SPOC","IQAC"],"note":"Identical read-only entry in four Functions menus. The student portal carries its own calendar as well, making five surfaces for one college-level artefact."},{"key":"preference","label":"Course preference","ids":["F46","F47"],"logins":["FAC","HOD"],"note":"Select Preferred Courses and Faculty Course preference sit next to each other in the HOD menu and neither is used."},{"key":"attendance-status","label":"Attendance status report","ids":["F48","F49"],"logins":["HOD"],"note":"Staff Attendance Status and First Year Attendance Status are the same report at two scopes."},{"key":"attendance-correction","label":"Attendance correction","ids":["F54","F55"],"logins":["HOD"],"note":"Unblock Attendance and Attendance Change Requests both reopen a locked record by different routes."},{"key":"period-logs","label":"Period logs","ids":["F56","F57"],"logins":["HOD"],"note":"Add and Delete are two menu entries for one log."},{"key":"co-po-map","label":"CO to PO mapping","ids":["F60"],"logins":["FAC","HOD"],"note":"Authored by the course coordinator, viewed and audited by the HOD."},{"key":"obe-threshold","label":"OBE target and threshold","ids":["F61"],"logins":["FAC","HOD"],"note":"Set on the course coordinator page, governed from OBE Component."},{"key":"feedback","label":"Student feedback","ids":["F68","F102","F117"],"logins":["FAC","HOD","SPOC","SP"],"note":"The student gives it in the portal, the SPOC opens and closes the window and reports on it, and faculty and HOD each read their own slice."},{"key":"fetch-report","label":"Report retrieval","ids":["F71","F18"],"logins":["DC","FAC","HOD","SPOC","IQAC"],"note":"Fetch Report in two logins, Fields Report in the third."},{"key":"user-manual","label":"User manual","ids":["F72"],"logins":["DC","FAC","HOD","SPOC","IQAC"],"note":"Same item in all three navigations."},{"key":"helpdesk","label":"Helpdesk ticket","ids":["F73"],"logins":["DC","FAC","HOD","SPOC","IQAC","CNS"],"note":"The identical global button on every page of six logins."},{"key":"account","label":"Account self-service","ids":["F74"],"logins":["FAC","HOD","SPOC","IQAC"],"note":"Change photo and change password."},{"key":"notice","label":"Notices","ids":["F20","F75"],"logins":["DC","FAC","HOD"],"note":"Authored on the coordinator Notice Board, displayed as a banner elsewhere."},{"key":"ldpr-view","label":"LDPR progress","ids":["F40","F41","F99"],"logins":["FAC","HOD","SPOC"],"note":"Faculty authors it; HOD monitors it."},{"key":"logout","label":"Logout","ids":["F77"],"logins":["DC","FAC","HOD","SPOC","CNS","SP","IQAC"],"note":"Present in all seven."},{"key":"institution-view","label":"Institution view","ids":["F78"],"logins":["SPOC","IQAC"],"note":"Identical college-wide browser in both top-level logins."},{"key":"dean-approval","label":"Dean approval","ids":["F79"],"logins":["SPOC","IQAC"],"note":"The marks-freeze gate appears in both; only one of them should hold the write."},{"key":"lock-cie","label":"Lock CIE events","ids":["F81"],"logins":["SPOC","IQAC"],"note":"Two logins can open and close the same assessment windows."},{"key":"enable-feedback","label":"Enable / disable feedback","ids":["F82"],"logins":["SPOC","IQAC"],"note":"Same control in both menus, immediately above the reports that measure it."},{"key":"attendance-dash","label":"Attendance dashboard","ids":["F86"],"logins":["SPOC","IQAC"],"note":"Same headline figures in both."},{"key":"course-scheme","label":"Course scheme report","ids":["F17","F104"],"logins":["DC","SPOC"],"note":"The coordinator verifies it at term setup; the SPOC reports on it college-wide."},{"key":"period-delete","label":"Period delete log","ids":["F57","F56"],"logins":["HOD","SPOC"],"note":"The HOD deletes, the SPOC audits the deletions."},{"key":"registration-window","label":"Course registration","ids":["F08","F09","F10","F11","F85","F121"],"logins":["DC","SPOC","SP"],"note":"Three bulk and individual routes in the coordinator login, a window control in SPOC, and self-service in the portal."},{"key":"attendance-lag","label":"Attendance lag reporting","ids":["F48","F49","F93","F103"],"logins":["HOD","SPOC"],"note":"Four screens answer one question — which classes have no attendance entered. Two in the HOD menu, two in SPOC reports."},{"key":"progress-report","label":"Progress report","ids":["F122"],"logins":["FAC","SP"],"note":"The faculty consolidated report and the student progress sheet are the same document."},{"key":"fee","label":"Fees","ids":["F101","F114"],"logins":["SPOC","SP"],"note":"The SPOC chases the due list; the student pays from the portal."},{"key":"instance","label":"Instance switching","ids":["F124"],"logins":["DC","FAC","HOD","SPOC","CNS","IQAC"],"note":"Every staff login lands on the same instance chooser."},{"key":"qp-template","label":"Question paper template creation","ids":["F130"],"logins":["DC","FAC"],"note":"The same unit-policy builder appears in both logins. The manual's own instruction is to look before creating, because neither login warns that an identical template already exists."},{"key":"qp-setup","label":"Question paper pattern setup","ids":["F131","F132","F33"],"logins":["DC","FAC"],"note":"Three ways to reach one outcome: the coordinator sets it globally, the faculty sets it per section, or the coordinator sets it and the faculty overrides. Which one applies is itself a per-event setting."},{"key":"freeze","label":"The freeze chain","ids":["F142","F144","F79"],"logins":["FAC","HOD","SPOC"],"note":"One decision, three gates, three logins — and each gate can only be undone by the one above it."},{"key":"ldpr-topic","label":"Adding course topics","ids":["F147"],"logins":["DC","FAC"],"note":"Either login can create the syllabus topics, and whoever gets there first defines them for everyone teaching that course."}],"menus":{"DC":{"label":"Department Coordinator — top navigation","items":["Course creation","Assign Course","Student","Teacher","Notice Board","Fields Report","User Manual","Scheme Report","Transaction List","Timetable creation","Logout"]},"FAC_nav":{"label":"Faculty — top navigation","items":["Home","Student","Counselling","User Manual","Fetch Report","Logout"]},"FAC_fn":{"label":"Faculty — Functions","items":["Course coordinator page","Attendance and CIE Analysis","Calender Of Events","Select Preferred Courses"]},"FAC_rep":{"label":"Faculty — Reports","items":["My Feedback 1","Result Analysis Report"]},"HOD_nav":{"label":"HOD — top navigation","items":["Home","Student","Counselling","User Manual","Fetch Report","Logout"]},"HOD_fn":{"label":"HOD — Functions","items":["Course coordinator page","Attendance and CIE Analysis","View Timetable","Calender Of Events","Select Preferred Courses","Staff Attendance Status","Faculty Course preference","Teacher Search","Counselling","First Year Attendance Status","Staff Indices","View CCM","Unblock Attendance","Co-ordinator setup","OBE Component","Attendance Change Requests","Add Period Logs","Delete Period Logs","Assign Teacher to Course","Student Feedback CS"]},"SPOC_nav":{"label":"SPOC — top navigation","items":["Home","Student","Counselling","User Manual","Fetch Report","Logout"]},"SPOC_fn":{"label":"SPOC — Functions","items":["Calender Of Events","Institution View","Attendance and CIE Analysis","Dean Approval","Teacher Search","Update Teacher Contact","Lock Cie events","Enable/Disable Feedback","Send CIE SMS","Send Attendance SMS","Enable/Disable Course Registration","Attendance Dashboard"]},"SPOC_rep":{"label":"SPOC — Reports","items":["Attendance & CIE Eligibility Report","User Manual for Freezing","Course Reg.","SMS Status Report","Staff Attendance Lag Report","LDPR Report","Deactivated Students Report","Change Branch Report","COURSE SCHEME REPORT","Period Delete Log Report","Counselling Report","Feedback Status Report","Feedback Report","Pending Feedback Report","Genderwise Registration Report","Exam Details Report","CIE Marks Entry Status Report","LDPR Topics Pending Status","Fields Report","Section Result Analysis Report","Fee Due Report"]},"IQAC_fn":{"label":"IQAC Head — Functions","items":["Calender Of Events","Institution View","Attendance and CIE Analysis","Dean Approval","Teacher Search","Lock Cie events","Enable/Disable Feedback","Add Vision/Mission, PO, PSO","Attendance Dashboard"]},"CNS_nav":{"label":"Counsellor — top navigation","items":["Home","Student","Reports","Logout"]},"CNS_rep":{"label":"Counsellor — Reports","items":["Counselling Report","Student Assigned to Proctor List","Student Not Assigned to Proctor List"]},"SP_fn":{"label":"Student / Parent portal — official function list","items":["Profile viewing","Fee paid details and pending fees","Time Table","Exam History","Exam form","Course Feedback","Course Exit Survey","Grievance Redressal system","Counselling Details","Course Registration"]}},"termsetup":[{"n":1,"act":"Instance Creation","by":"CONTINEO"},{"n":2,"act":"Creation of calendar of events","by":"CONTINEO"},{"n":3,"act":"Courses Creation (refer to the final scheme)","by":"Dept. Coordinator"},{"n":4,"act":"Assign Courses → Set Parameters → View Assigned Courses","by":"Dept. Coordinator"},{"n":5,"act":"Promote Students","by":"Dept. Coordinator"},{"n":6,"act":"Course Registration Regular","by":"Dept. Coordinator"},{"n":7,"act":"Create and Assign the students to lab batches","by":"Dept. Coordinator"},{"n":8,"act":"Assign teachers to the courses","by":"Dept. Coordinator"},{"n":9,"act":"Create Timetable → Verify Timetable","by":"Dept. Coordinator"},{"n":10,"act":"Course scheme report verification (before faculty take attendance)","by":"Dept. Coordinator"},{"n":11,"act":"Term set-up verification (before faculty take attendance)","by":"FACULTY"},{"n":12,"act":"Backlog course Setup and Registration (regular and supplementary)","by":"Dept. Coordinator"}],"manuals":[{"id":"M01","title":"Courses Creation user Manual","file":"Courses Creation user Manual-1.pdf","pages":14,"logins":["DC"],"conf":true,"sum":"Creating core, integrated and elective courses, and editing or viewing what was created.","covers":["F01","F02"]},{"id":"M02","title":"Assign course user manual","file":"Assign course user manual-2.pdf","pages":20,"logins":["DC"],"conf":true,"sum":"Dragging created courses into a semester, pulling in other departments' courses, and setting per-course parameters for core, integrated, lab, elective and open-elective courses.","covers":["F03","F04","F05","F141"]},{"id":"M03","title":"Promote students","file":"Promote students -3.pdf","pages":8,"logins":["DC"],"conf":true,"sum":"Promoting eligible students into the next semester and placing them in sections, with the USN colour code explained.","covers":["F06","F07"]},{"id":"M04","title":"Courses Registration Report","file":"Courses Registartion Report -4.pdf","pages":19,"logins":["DC"],"conf":true,"sum":"Both registration routes — one student at a time by USN, and a whole section at once — including electives.","covers":["F08","F09","F10","F121"]},{"id":"M05","title":"Create Lab batches","file":"Create Lab batches-5.pdf","pages":9,"logins":["DC"],"conf":true,"sum":"Declaring how many lab batches a course needs and placing students into them, with the rules on when batches lock.","covers":["F12","F13"]},{"id":"M06","title":"Assign teacher to course","file":"Assign teacher to course-6.pdf","pages":14,"logins":["DC"],"conf":true,"sum":"Mapping faculty to courses, adding a newly joined teacher, and assigning one teacher to several departments.","covers":["F22","F23","F133","F134"]},{"id":"M07","title":"Time table entry","file":"Time table entry -7.pdf","pages":16,"logins":["DC"],"conf":true,"sum":"Building the weekly grid slot by slot, the prerequisites that must be done first, and the separate open-elective grid.","covers":["F14","F15","F16"]},{"id":"M08","title":"Term setup and verification","file":"Term setup and verification -8.pdf","pages":12,"logins":["FAC"],"conf":true,"sum":"What a faculty member must check before taking the first attendance: rolling timetable, assigned courses and the student list.","covers":["F15","F76","F26"]},{"id":"M09","title":"Scheme Report verification","file":"Scheme Report verification.pdf","pages":6,"logins":["DC"],"conf":true,"sum":"Generating the course scheme report and the twelve attributes to verify against the college scheme before anything else proceeds.","covers":["F17"]},{"id":"M10","title":"Attendance Entry User Manual","file":"Attendance Entry User Manual NCET.pdf","pages":19,"logins":["FAC"],"conf":false,"sum":"Marking, viewing, editing and reporting attendance, plus an eleven-row FAQ covering blocked logins, missing students, NC status and when to add, delete or postpone a period.","covers":["F26","F27","F28","F29","F76"]},{"id":"M11","title":"CIE setup user manual","file":"CIE setup user manual.pdf","pages":43,"logins":["DC"],"conf":false,"sum":"The whole internal-assessment configuration model — buckets, events, relations, rounding and the final equation — worked through for theory, lab and integrated courses.","covers":["F125","F126","F127","F128","F129"]},{"id":"M12","title":"QP setup and CIE marks entry","file":"NCET -CIE entry user Manual.pdf","pages":38,"logins":["DC","FAC"],"conf":false,"sum":"Setting the question paper pattern from either login, approving it, and entering marks individually or by Excel upload.","covers":["F33","F34","F131","F132","F32","F36","F37"]},{"id":"M13","title":"How to create the QP template","file":"User Manual for How to create the QP template.pdf","pages":29,"logins":["DC","FAC"],"conf":false,"sum":"Building reusable question paper templates from unit policies, for theory, practical and project courses.","covers":["F130","F35"]},{"id":"M14","title":"Backlog course setup","file":"Backlog course setup user manual-new.pdf","pages":12,"logins":["DC"],"conf":false,"sum":"Where a backlog course belongs, how to re-register a student into it, and the unassigned-backlog step that must follow.","covers":["F138","F137"]},{"id":"M15","title":"Freezing Manual","file":"Freezing_Manual.pdf","pages":21,"logins":["FAC","HOD","SPOC"],"conf":false,"sum":"The four-stage freeze — faculty, HOD, Dean, exam sync — with the prerequisites, the conditions that keep each Approve button grey, and who can undo what.","covers":["F142","F143","F144","F145","F146","F79"]},{"id":"M16","title":"LDPR module setup","file":"LDPR Usermanual.pdf","pages":18,"logins":["DC","FAC"],"conf":true,"sum":"Adding course topics from either login and recording syllabus progress against each class, including non-topic classes.","covers":["F147","F40","F148","F149"]},{"id":"M17","title":"Counselling user manual","file":"NCET Counselling user manual.pdf","pages":13,"logins":["FAC","HOD"],"conf":false,"sum":"The mentor's view of a mentee and the counselling note with its follow-up flag, plus the HOD's counselling report.","covers":["F42","F43"]},{"id":"M18","title":"Student Data update","file":"Student Data update User Manual.pdf","pages":6,"logins":["DC"],"conf":false,"sum":"Filtering the student list and editing records one at a time or all at once.","covers":["F135"]},{"id":"M19","title":"OBE user manual V2.0","file":"NCET-OBE-usermanual_V2.0.pdf","pages":70,"logins":["DC","HOD","FAC"],"conf":false,"sum":"The full outcome-based-education chain: vision and mission, POs and PSOs, course outcomes, CO-PO mapping, thresholds, ISA events and every attainment report.","covers":["F123","F59","F24","F25","F60","F61","F151","F152","F62","F63","F64","F65","F153"]}]};
-const LOCAL = false;   /* true only in the copy that sits in the same folder as the PDFs */
+const LOCAL = false;
 const LOGINS = ["DC","FAC","HOD","SPOC","CNS","SP","IQAC"];
 const LNAME = {DC:"Department Coordinator",FAC:"Faculty / Staff",HOD:"HOD",SPOC:"SPOC",
                CNS:"Counsellor",SP:"Student / Parent portal",IQAC:"IQAC Head"};
-const LSHORT = {DC:"DC",FAC:"FAC",HOD:"HOD",SPOC:"SPOC",CNS:"CNS",SP:"S/P",IQAC:"IQAC"};
-const STAT = {live:["\u25cf","Live"],partial:["\u25d0","Partial"],unused:["\u25cb","Present, unused"],
-              listed:["\u25b3","Listed only \u2014 screen not shown"]};
-const SRC = {video:"Seen in a recording",manual:"Documented in a manual",both:"Recording and manual"};
-const F = D.features, M = D.manuals || [], byid = {}, byman = {};
+const SHORT = {DC:"DC",FAC:"FAC",HOD:"HOD",SPOC:"SPOC",CNS:"CNS",SP:"S/P",IQAC:"IQAC"};
+const STATE = {live:["●","In use"],partial:["◐","Partly built"],
+               unused:["○","Present, unused"],listed:["△","Listed, never opened"]};
+const EVID = {video:"Seen in a recording",manual:"Documented in a manual only",both:"Recording and manual"};
+const F = D.features, M = D.manuals || [];
+const byid = {}, byman = {};
 F.forEach(f => byid[f.id] = f);
 M.forEach(m => byman[m.id] = m);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nops = f => (f.ops || []).length;
 
-/* ── theme ─────────────────────────── */
+/* theme ------------------------------------------------ */
 const root = document.documentElement;
-function setTheme(t){
-  root.setAttribute("data-theme", t);
-  try { localStorage.setItem("atlas-theme", t); } catch(e) {}
+function theme(t){
+  if (t === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", t);
+  try { localStorage.setItem("sims-theme", t); } catch(e) {}
   document.querySelectorAll(".theme button").forEach(b =>
-    b.setAttribute("aria-pressed", b.dataset.th === t ? "true" : "false"));
+    b.setAttribute("aria-pressed", String(b.dataset.th === t)));
 }
-try { const s = localStorage.getItem("atlas-theme"); if (s) setTheme(s); } catch(e) {}
-document.querySelectorAll(".theme button").forEach(b =>
-  b.onclick = () => setTheme(b.dataset.th));
+let saved = "auto";
+try { saved = localStorage.getItem("sims-theme") || "auto"; } catch(e) {}
+theme(saved);
+document.querySelectorAll(".theme button").forEach(b => b.onclick = () => theme(b.dataset.th));
 
-/* ── stats ─────────────────────────── */
-const ops = f => (f.ops || []).length;
-const totalOps = F.reduce((a,f) => a + ops(f), 0);
-const touch = F.reduce((a,f) => a + f.logins.length, 0);
+/* headline figures ------------------------------------- */
+const totalOps = F.reduce((a,f) => a + nops(f), 0);
 const menuN = Object.values(D.menus).reduce((a,m) => a + m.items.length, 0);
-document.getElementById("stats").innerHTML = [
-  [F.length,"Capabilities"],[totalOps,"Operations"],[7,"Logins mapped"],[touch,"Login touchpoints"],
-  [M.length,"User manuals"],[M.reduce((a,m)=>a+m.pages,0),"Manual pages"],
-  [D.duplicates.length,"Overlap groups"],[menuN,"Menu entries"]
-].map(([n,l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
-document.getElementById("n1").textContent = F.length;
-document.getElementById("n2").textContent = D.duplicates.length;
-document.getElementById("n3").textContent = Object.keys(D.menus).length;
-document.getElementById("n4").textContent = M.length;
+document.getElementById("figs").innerHTML = [
+  [F.length,"capabilities"],[totalOps,"operations"],["7","logins"],
+  [M.length,"manuals read"],[D.duplicates.length,"repeated jobs"],[menuN,"menu entries"]
+].map(([n,l]) => `<div class="fig"><b>${n}</b><span class="lbl">${l}</span></div>`).join("");
+document.getElementById("c1").textContent = F.length;
+document.getElementById("c2").textContent = D.duplicates.length;
+document.getElementById("c3").textContent = Object.keys(D.menus).length;
+document.getElementById("c4").textContent = M.length;
+document.getElementById("foot").innerHTML =
+  `Internal requirement capture for Nagarjuna College of Engineering and Technology, built from three
+   walkthrough recordings and ${M.length} Contineo user manuals. Seven logins are mapped; Admission and
+   Examination were never issued, so they stay unmapped. The manuals themselves are Contineo’s
+   confidential documents and are not republished here.`;
 
-/* ── filters ───────────────────────── */
-document.getElementById("lgseg").innerHTML = LOGINS.map(l =>
-  `<button data-lg="${l}" aria-pressed="false" title="${esc(LNAME[l])}">${LSHORT[l]}</button>`).join("");
-const cats = [...new Set(F.map(f => f.cat))].sort();
+/* filters ---------------------------------------------- */
+document.getElementById("lg").innerHTML = LOGINS.map(l =>
+  `<button data-lg="${l}" aria-pressed="false" title="${esc(LNAME[l])}">${SHORT[l]}</button>`).join("");
+const areas = [...new Set(F.map(f => f.cat))].sort();
 document.getElementById("cat").insertAdjacentHTML("beforeend",
-  cats.map(c => `<option>${esc(c)}</option>`).join(""));
+  areas.map(c => `<option>${esc(c)}</option>`).join(""));
 
-let state = {q:"", lg:new Set(), cat:"", shared:"", src:"", sel:null, selMan:null};
+let S = {q:"", lg:new Set(), cat:"", reach:"", src:"", pick:null, vol:null};
 
-function match(f){
-  if (state.lg.size && ![...state.lg].every(l => f.logins.includes(l))) return false;
-  if (state.cat && f.cat !== state.cat) return false;
-  if (state.shared === "multi" && f.logins.length < 2) return false;
-  if (state.shared === "all3" && f.logins.length < 3) return false;
-  if (state.shared === "solo" && f.logins.length !== 1) return false;
-  if (state.shared === "unused" && f.status !== "unused") return false;
-  if (state.src === "hasman") { if (!(f.man || []).length) return false; }
-  else if (state.src && f.src !== state.src) return false;
-  if (state.q){
+function hit(f){
+  if (S.lg.size && ![...S.lg].every(l => f.logins.includes(l))) return false;
+  if (S.cat && f.cat !== S.cat) return false;
+  if (S.reach === "multi" && f.logins.length < 2) return false;
+  if (S.reach === "all3" && f.logins.length < 3) return false;
+  if (S.reach === "solo" && f.logins.length !== 1) return false;
+  if (S.reach === "unused" && f.status !== "unused") return false;
+  if (S.src === "hasman") { if (!(f.man || []).length) return false; }
+  else if (S.src && f.src !== S.src) return false;
+  if (S.q){
     const hay = [f.id,f.name,f.cat,f.desc,f.note||"",(f.ops||[]).join(" "),
-                 Object.values(f.path||{}).join(" "),(f.man||[]).map(i=>byman[i]?byman[i].title:"").join(" ")]
-                .join(" ").toLowerCase();
-    if (!hay.includes(state.q.toLowerCase())) return false;
+                 Object.values(f.path||{}).join(" ")].join(" ").toLowerCase();
+    if (!hay.includes(S.q.toLowerCase())) return false;
   }
   return true;
 }
-
-function chips(f){
-  return `<span class="chipset">${LOGINS.map(l =>
-    `<span class="chip ${f.logins.includes(l)?"on":""}">${LSHORT[l]}</span>`).join("")}</span>`;
+function mark(text){
+  if (!S.q) return esc(text);
+  const i = text.toLowerCase().indexOf(S.q.toLowerCase());
+  if (i < 0) return esc(text);
+  return esc(text.slice(0,i)) + "<u>" + esc(text.slice(i, i + S.q.length)) + "</u>" + esc(text.slice(i + S.q.length));
+}
+function tags(f){
+  const shown = f.logins.slice(0,3).map(l => `<span class="tag">${SHORT[l]}</span>`).join("");
+  const extra = f.logins.length > 3 ? `<span class="tag more">+${f.logins.length - 3}</span>` : "";
+  return `<span class="tags">${shown}${extra}</span>`;
 }
 
-function renderGrid(){
-  const list = F.filter(match);
-  document.getElementById("grid").innerHTML = list.length ? list.map(f => `
-    <button class="card" data-id="${f.id}" aria-current="${state.sel===f.id}">
-      <div class="ctop"><span class="cid">${f.id}</span>
-        <span class="st ${f.status}" title="${esc(STAT[f.status][1])}">${STAT[f.status][0]}</span></div>
-      <div class="cname">${esc(f.name)}</div>
-      <div class="cbot"><span class="ccat">${esc(f.cat)}</span>
-        <span style="display:flex;gap:4px;align-items:center">
-        ${(f.man||[]).length?`<span class="mrk" title="Documented in ${(f.man||[]).length} manual(s)">\u00a7${(f.man||[]).length}</span>`:""}
-        <span class="opn">${ops(f)} ops</span></span></div>
-      ${chips(f)}
-    </button>`).join("")
-    : `<div style="padding:30px;background:var(--bg)" class="empty">Nothing matches those filters.</div>`;
-  document.getElementById("count").textContent =
-    `${list.length} of ${F.length} \u00b7 ${list.reduce((a,f)=>a+ops(f),0)} operations`;
-  document.querySelectorAll(".card").forEach(c =>
-    c.onclick = () => { state.sel = c.dataset.id; renderGrid(); renderPanel(); });
+function drawIndex(){
+  const list = F.filter(hit);
+  const groups = [];
+  list.forEach(f => {
+    let g = groups.find(x => x.cat === f.cat);
+    if (!g) groups.push(g = {cat:f.cat, rows:[]});
+    g.rows.push(f);
+  });
+  document.getElementById("index").innerHTML = list.length ? groups.map(g => `
+    <section class="group">
+      <h2>${esc(g.cat)} <i>${g.rows.length}</i></h2>
+      ${g.rows.map(f => `
+        <button class="row" data-id="${f.id}" aria-current="${S.pick === f.id}">
+          <span class="rid">${f.id}</span>
+          <span class="rname">${mark(f.name)}<span class="dot" title="${esc(STATE[f.status][1])}">${STATE[f.status][0]}</span></span>
+          ${tags(f)}
+          <span class="rops">${nops(f)} ops</span>
+        </button>`).join("")}
+    </section>`).join("")
+    : `<p class="none">Nothing matches those filters. <button class="clear" onclick="document.getElementById('clear').click()">Reset them</button></p>`;
+  document.getElementById("tally").textContent =
+    `${list.length} of ${F.length} · ${list.reduce((a,f)=>a+nops(f),0)} operations`;
+  document.querySelectorAll(".row").forEach(r => r.onclick = () => {
+    S.pick = r.dataset.id; drawIndex(); drawRead();
+    if (window.matchMedia("(max-width:1020px)").matches)
+      document.getElementById("read").scrollIntoView({block:"start", behavior:"smooth"});
+  });
 }
 
-function manLink(id){
-  const m = byman[id]; if (!m) return "";
-  return `<button data-man="${id}">\u00a7 ${esc(m.title)}</button>`;
-}
-
-function renderPanel(){
-  const p = document.getElementById("panel");
-  const f = byid[state.sel];
-  if (!f){ p.innerHTML = `<div class="empty"><h2 style="margin:0 0 8px;font-size:18px">Pick a capability</h2>
-    Every card opens the full record: what the screen does, the path to it in each login that has it,
-    every operation available there, and which user manual documents it.</div>`; return; }
-  const rel = F.filter(o => o.id !== f.id && (
-      (f.dup && o.dup === f.dup) || (o.cat === f.cat && o.logins.some(l => f.logins.includes(l)))
-    )).slice(0,6);
-  p.innerHTML = `
-    <div class="pid">${f.id} &nbsp;\u00b7&nbsp; ${esc(STAT[f.status][1])}</div>
+function drawRead(){
+  const el = document.getElementById("read"), f = byid[S.pick];
+  if (!f){
+    const rank = LOGINS.map(l => ({l, n:F.filter(x => x.logins.includes(l)).length,
+      o:F.filter(x => x.logins.includes(l)).reduce((a,x)=>a+nops(x),0)})).sort((a,b) => b.n - a.n);
+    el.innerHTML = `
+      <div class="lbl">Start here</div>
+      <h2>Seven logins, ${F.length} capabilities</h2>
+      <p class="lead">Pick any row to read what that screen does, the exact menu path in each login that
+      has it, and every operation available once you are inside. The counts below are how the system is
+      actually weighted &mdash; SPOC and the HOD carry most of it, the Counsellor almost none.</p>
+      <div class="block rest"><h3 class="lbl">Capabilities per login <i>ops</i></h3>
+        <dl>${rank.map(r => `<dt>${esc(LNAME[r.l])}</dt><dd>${r.n}</dd><dd>${r.o}</dd>`).join("")}</dl>
+      </div>
+      <div class="caution">Admission and Examination are missing because the vendor never issued those
+      logins &mdash; confirmed on the third recording. They sit at either end of the student life-cycle;
+      everything between them is here.</div>`;
+    return;
+  }
+  const kin = F.filter(o => o.id !== f.id &&
+      ((f.dup && o.dup === f.dup) || (o.cat === f.cat && o.logins.some(l => f.logins.includes(l))))).slice(0,6);
+  el.innerHTML = `
+    <div class="eyebrow">
+      <span class="lbl">${f.id}</span><span class="tag">${esc(f.cat)}</span>
+      <span class="tag">${STATE[f.status][0]} ${esc(STATE[f.status][1])}</span>
+      <span class="tag">${esc(EVID[f.src] || f.src)}</span>
+    </div>
     <h2>${esc(f.name)}</h2>
-    <p class="desc">${esc(f.desc)}</p>
-    <dl class="dl">
-      <div><dt>Category</dt><dd>${esc(f.cat)}</dd></div>
-      <div><dt>Logins</dt><dd>${chips(f)}</dd></div>
-      <div><dt>Where</dt><dd class="where">${f.logins.map(l =>
-        `<span><b>${esc(LNAME[l])}</b>${esc((f.path||{})[l] || "\u2014")}</span>`).join("")}</dd></div>
-      <div><dt>Source</dt><dd>${esc(SRC[f.src] || f.src)}</dd></div>
-    </dl>
-    ${(f.ops||[]).length ? `<div class="ops"><h3>What you can do here <em>${ops(f)}</em></h3>
-      <ol>${f.ops.map(o => `<li>${esc(o)}</li>`).join("")}</ol></div>` : ""}
-    ${f.note ? `<div class="flag">${esc(f.note)}</div>` : ""}
-    ${(f.man||[]).length ? `<div class="mref"><h3>Documented in</h3>
-      <div class="rel">${f.man.map(manLink).join("")}</div></div>` : ""}
-    ${rel.length ? `<div class="mref"><h3>Related</h3>
-      <div class="rel">${rel.map(o => `<button data-id="${o.id}">${esc(o.name)}</button>`).join("")}</div></div>` : ""}`;
-  wire(p);
+    <p class="lead">${esc(f.desc)}</p>
+    <div class="block"><h3 class="lbl">Where to find it <i>${f.logins.length} ${f.logins.length === 1 ? "login" : "logins"}</i></h3>
+      <div class="paths">${f.logins.map(l => `
+        <div class="path"><span>${SHORT[l]}</span><code>${esc((f.path||{})[l] || "—")}</code></div>`).join("")}
+      </div></div>
+    ${nops(f) ? `<div class="block"><h3 class="lbl">What you can do here <i>${nops(f)}</i></h3>
+      <ol class="steps">${f.ops.map(o => `<li><span>${esc(o)}</span></li>`).join("")}</ol></div>` : ""}
+    ${f.note ? `<div class="caution">${esc(f.note)}</div>` : ""}
+    ${(f.man||[]).length ? `<div class="block"><h3 class="lbl">Documented in</h3>
+      <div class="chipline">${f.man.filter(i => byman[i]).map(i =>
+        `<button data-man="${i}">${esc(byman[i].title)} · ${byman[i].pages}pp</button>`).join("")}</div></div>` : ""}
+    ${kin.length ? `<div class="block"><h3 class="lbl">Nearby</h3>
+      <div class="chipline">${kin.map(o => `<button data-id="${o.id}">${esc(o.name)}</button>`).join("")}</div></div>` : ""}`;
+  link(el);
 }
 
-function wire(el){
+function link(el){
   el.querySelectorAll("[data-id]").forEach(b => b.onclick = () => {
-    show("atlas"); state.sel = b.dataset.id; renderGrid(); renderPanel();
-    document.getElementById("v-atlas").scrollIntoView({block:"start"});
+    open_("index"); S.pick = b.dataset.id; drawIndex(); drawRead();
+    document.querySelector('.row[aria-current="true"]')?.scrollIntoView({block:"center"});
   });
   el.querySelectorAll("[data-man]").forEach(b => b.onclick = () => {
-    show("manuals"); state.selMan = b.dataset.man; renderMans(); renderManPanel();
+    open_("manuals"); S.vol = b.dataset.man; drawShelf();
+    document.querySelector(`.vol[data-v="${S.vol}"]`)?.scrollIntoView({block:"center"});
   });
 }
 
-/* ── manuals ───────────────────────── */
-document.getElementById("manhint").innerHTML = LOCAL
-  ? "Nineteen manuals · 387 pages · <strong>Open the PDF</strong> works because this copy sits in the same folder as the files"
-  : "Nineteen manuals · 387 pages · the PDFs are Contineo's and are not served here — every step they describe is in the capabilities";
-function renderMans(){
-  document.getElementById("mans").innerHTML = M.map(m => `
-    <div class="man">
-      <div class="mt"><h3>${esc(m.title)}</h3><span class="mid">${m.id}</span></div>
-      <div class="meta">
-        <span class="pill">${m.pages} pages</span>
-        ${m.logins.map(l => `<span class="pill k">${LSHORT[l]}</span>`).join("")}
-        <span class="pill">${m.covers.length} capabilities</span>
-        ${m.conf ? `<span class="pill">Vendor confidential</span>` : ""}
-      </div>
+/* manuals ---------------------------------------------- */
+document.getElementById("manhint").textContent = LOCAL
+  ? "Nineteen manuals, 387 pages. Because this copy sits in the same folder as the files, Open the PDF works."
+  : "Nineteen manuals, 387 pages, every step folded into the capabilities. The PDFs are Contineo’s and are not served from this site — open your own copy.";
+
+function drawShelf(){
+  document.getElementById("shelf").innerHTML = M.map(m => {
+    const open = S.vol === m.id;
+    return `<article class="vol" data-v="${m.id}">
+      <div class="volmeta"><span class="lbl">${m.id}</span>
+        <span class="tag">${m.pages} pages</span>
+        ${m.logins.map(l => `<span class="tag">${SHORT[l]}</span>`).join("")}
+        ${m.conf ? `<span class="tag">confidential</span>` : ""}</div>
+      <h3>${esc(m.title)}</h3>
       <p>${esc(m.sum)}</p>
+      ${open ? `<div class="block" style="margin-top:4px"><h3 class="lbl">Documents <i>${m.covers.length}</i></h3>
+        <div class="chipline">${m.covers.filter(i => byid[i]).map(i =>
+          `<button data-id="${i}">${esc(byid[i].name)}</button>`).join("")}</div></div>` : ""}
       <div class="acts">
-        ${LOCAL ? `<a class="dl-btn" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
-          Open the PDF</a>` : ""}
-        <button class="dl-btn ghost" data-man="${m.id}">What it covers \u2192</button>
+        ${LOCAL ? `<a class="go" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>Open the PDF</a>` : ""}
+        <button class="go quiet" data-v="${m.id}">${open ? "Hide" : "What it covers"}</button>
       </div>
-    </div>`).join("");
-  document.querySelectorAll("#mans [data-man]").forEach(b => b.onclick = () => {
-    state.selMan = b.dataset.man; renderManPanel();
+    </article>`;
+  }).join("");
+  document.querySelectorAll(".go.quiet[data-v]").forEach(b => b.onclick = () => {
+    S.vol = (S.vol === b.dataset.v) ? null : b.dataset.v; drawShelf();
   });
+  link(document.getElementById("shelf"));
 }
 
-function renderManPanel(){
-  const p = document.getElementById("panel3");
-  const m = byman[state.selMan];
-  if (!m){ p.innerHTML = `<div class="empty"><h2 style="margin:0 0 8px;font-size:18px">Pick a manual</h2>
-    Each one lists the capabilities it documents. The PDFs themselves are Contineo's confidential
-    documents and are not published here \u2014 open your local copy, or ask the vendor for consent to host them.</div>`;
-    return; }
-  p.innerHTML = `
-    <div class="pid">${m.id} &nbsp;\u00b7&nbsp; ${m.pages} pages</div>
-    <h2>${esc(m.title)}</h2>
-    <p class="desc">${esc(m.sum)}</p>
-    <dl class="dl">
-      <div><dt>Logins</dt><dd>${m.logins.map(l => esc(LNAME[l])).join(", ")}</dd></div>
-      <div><dt>File</dt><dd><code style="font-family:var(--f-mono);font-size:12px">${esc(m.file)}</code></dd></div>
-      <div><dt>Status</dt><dd>${m.conf
-        ? "Carries a Contineo confidentiality notice \u2014 not republished"
-        : "No confidentiality notice found, still not republished"}</dd></div>
-    </dl>
-    ${LOCAL ? `<a class="dl-btn" style="margin-top:14px" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
-      Open the PDF</a>`
-    : `<div class="flag" style="margin-top:14px">The PDF is not served from this site. Open your own copy of
-       <strong>${esc(m.file)}</strong>, or use the offline build of this page, which sits in the same folder as
-       the manuals and opens them directly.</div>`}
-    <div class="mref"><h3>Capabilities it documents <em></em></h3>
-      <div class="rel">${m.covers.filter(i => byid[i]).map(i =>
-        `<button data-id="${i}">${esc(byid[i].name)}</button>`).join("")}</div></div>
-    <div class="flag">Every step in this manual is folded into those capabilities &mdash; open one to read the
-    operations in order.</div>`;
-  wire(p);
-}
-
-/* ── overlaps ──────────────────────── */
-document.getElementById("ovl").innerHTML = D.duplicates.map((d,i) => `
-  <div class="ov">
-    <button class="ovh" data-ov="${i}">
-      <span class="ovn">${esc(d.label)}</span>
-      <span class="chipset">${LOGINS.map(l =>
-        `<span class="chip ${d.logins.includes(l)?"on":""}">${LSHORT[l]}</span>`).join("")}</span>
-      <span class="pill">${d.ids.length}</span>
+/* repeated --------------------------------------------- */
+document.getElementById("repeats").innerHTML = D.duplicates.map((d,i) => `
+  <div class="pair">
+    <button class="pairhead" data-p="${i}" aria-expanded="false">
+      <strong>${esc(d.label)}</strong>
+      <span class="tags">${d.logins.map(l => `<span class="tag">${SHORT[l]}</span>`).join("")}</span>
+      <span class="rops">${d.ids.length}×</span>
     </button>
-    <div class="ovb" hidden>
-      <p style="margin:0 0 4px">${esc(d.note||"")}</p>
-      <div class="rel">${d.ids.filter(i => byid[i]).map(i =>
+    <div class="pairbody" hidden>
+      <p>${esc(d.note || "")}</p>
+      <div class="chipline">${d.ids.filter(i => byid[i]).map(i =>
         `<button data-id="${i}">${esc(byid[i].name)}</button>`).join("")}</div>
     </div>
   </div>`).join("");
-document.querySelectorAll("[data-ov]").forEach(b => b.onclick = () => {
-  const body = b.nextElementSibling; body.hidden = !body.hidden; wire(body);
+document.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
+  const body = b.nextElementSibling;
+  body.hidden = !body.hidden;
+  b.setAttribute("aria-expanded", String(!body.hidden));
+  link(body);
 });
 
-/* ── menus ─────────────────────────── */
-document.getElementById("menus").innerHTML = Object.entries(D.menus).map(([k,m]) => `
-  <div class="menu"><h3>${esc(m.label)}</h3>
-    <ol>${m.items.map(it => `<li>${esc(it)}</li>`).join("")}</ol></div>`).join("");
-document.getElementById("steps").innerHTML = (D.termsetup||[]).map(s =>
-  `<tr><td class="n">${s.n}</td><td>${esc(s.act)}</td><td>${esc(s.by)}</td></tr>`).join("");
+/* menus ------------------------------------------------ */
+document.getElementById("menus").innerHTML = Object.values(D.menus).map(m => `
+  <div class="card"><h3>${esc(m.label)}</h3>
+    <ol>${m.items.map(i => `<li><span>${esc(i)}</span></li>`).join("")}</ol></div>`).join("");
+document.getElementById("seq").innerHTML = (D.termsetup || []).map(s =>
+  `<tr><td>${s.n}</td><td>${esc(s.act)}</td><td>${esc(s.by)}</td></tr>`).join("");
 
-/* ── tabs ──────────────────────────── */
-function show(name){
-  ["atlas","manuals","overlaps","menus"].forEach(n => {
+/* tabs ------------------------------------------------- */
+function open_(name){
+  ["index","manuals","repeats","menus"].forEach(n => {
     document.getElementById("v-"+n).hidden = n !== name;
-    document.getElementById("t-"+n).setAttribute("aria-selected", n === name);
+    document.getElementById("t-"+n).setAttribute("aria-selected", String(n === name));
   });
 }
-document.querySelectorAll(".tab").forEach(t =>
-  t.onclick = () => show(t.id.slice(2)));
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => open_(t.id.slice(2)));
 
-/* ── bind ──────────────────────────── */
-document.getElementById("q").oninput = e => { state.q = e.target.value; renderGrid(); };
-document.getElementById("cat").onchange = e => { state.cat = e.target.value; renderGrid(); };
-document.getElementById("shared").onchange = e => { state.shared = e.target.value; renderGrid(); };
-document.getElementById("src").onchange = e => { state.src = e.target.value; renderGrid(); };
+/* bindings --------------------------------------------- */
+document.getElementById("q").oninput = e => { S.q = e.target.value; drawIndex(); };
+document.getElementById("cat").onchange = e => { S.cat = e.target.value; drawIndex(); };
+document.getElementById("reach").onchange = e => { S.reach = e.target.value; drawIndex(); };
+document.getElementById("src").onchange = e => { S.src = e.target.value; drawIndex(); };
 document.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => {
   const l = b.dataset.lg;
-  state.lg.has(l) ? state.lg.delete(l) : state.lg.add(l);
-  b.setAttribute("aria-pressed", state.lg.has(l));
-  renderGrid();
+  S.lg.has(l) ? S.lg.delete(l) : S.lg.add(l);
+  b.setAttribute("aria-pressed", String(S.lg.has(l)));
+  drawIndex();
 });
-document.getElementById("reset").onclick = () => {
-  state = {q:"",lg:new Set(),cat:"",shared:"",src:"",sel:state.sel,selMan:state.selMan};
+document.getElementById("clear").onclick = () => {
+  S = {q:"", lg:new Set(), cat:"", reach:"", src:"", pick:S.pick, vol:S.vol};
   document.getElementById("q").value = "";
-  ["cat","shared","src"].forEach(i => document.getElementById(i).value = "");
+  ["cat","reach","src"].forEach(i => document.getElementById(i).value = "");
   document.querySelectorAll("[data-lg]").forEach(b => b.setAttribute("aria-pressed","false"));
-  renderGrid();
+  drawIndex();
 };
+document.addEventListener("keydown", e => {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  if (document.activeElement && document.activeElement.tagName === "INPUT") return;
+  const rows = [...document.querySelectorAll(".row")];
+  if (!rows.length) return;
+  const at = rows.findIndex(r => r.dataset.id === S.pick);
+  const next = e.key === "ArrowDown" ? Math.min(at + 1, rows.length - 1) : Math.max(at - 1, 0);
+  e.preventDefault();
+  S.pick = rows[at < 0 ? 0 : next].dataset.id;
+  drawIndex(); drawRead();
+  document.querySelector('.row[aria-current="true"]')?.scrollIntoView({block:"nearest"});
+});
 
-renderGrid(); renderPanel(); renderMans(); renderManPanel();
+drawIndex(); drawRead(); drawShelf();
 </script>
 </body>
 </html>
