@@ -2,6 +2,9 @@
 
 **→ [jayanth-torii.github.io/contineo-sims-atlas](https://jayanth-torii.github.io/contineo-sims-atlas)**
 
+Also deployable to Vercel: import this repo at [vercel.com/new](https://vercel.com/new) — `vercel.json`
+is already here, no build step, no configuration. Both hosts serve the same committed `index.html`.
+
 Every function in the Contineo SIMS student ERP as it runs at Nagarjuna College of Engineering
 and Technology, the login it lives in, and every operation available once you are there.
 
