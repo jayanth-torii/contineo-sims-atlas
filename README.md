@@ -45,9 +45,18 @@ Eleven of them carry an explicit notice:
 > right of reproduction or disclosure.
 
 What they *describe* is summarised here in our own words, which is ordinary internal documentation.
-The PDFs themselves stay with the college. If Contineo later gives written consent to host them,
-drop the files into `manuals/` and add a link to each manual card — the manual records already
-carry the exact filename.
+The PDFs themselves stay with the college.
+
+The site still opens them. On the **Manuals** tab, press **Attach the manual PDFs** and select your
+own copies — all nineteen at once, or drag the folder onto the page. Every manual then opens in a
+reader built into the page, on the site and on a phone alike. The files are read in the browser:
+nothing is uploaded, nothing is stored, and the attachment clears when you reload. Names are matched
+loosely, so a browser-renamed duplicate like `Freezing_Manual (1).pdf` still matches.
+
+The copy that sits in the same folder as the PDFs skips that step and opens them straight away.
+
+If Contineo later gives written consent to host them, drop the files into `manuals/` — the manual
+records already carry the exact filename.
 
 ## Still unmapped
 

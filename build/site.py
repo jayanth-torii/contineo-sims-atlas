@@ -234,6 +234,29 @@ ol.ops li::before{content:counter(o,decimal-leading-zero);font-family:var(--f-mo
 .tonal{min-height:40px;border-radius:var(--r-full);background:var(--s-highest);color:var(--on-surface);
   padding:0 18px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:500;font-size:14px}
 
+/* ── attach + pdf viewer ─────────────────────── */
+.attach{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px;padding:14px 16px;
+  background:var(--s-low);border-radius:var(--r-m)}
+.attach p{margin:0;flex:1 1 240px;min-width:0;color:var(--on-surface-variant)}
+.pdfwrap{position:fixed;inset:0;z-index:60;background:var(--s-lowest);display:flex;flex-direction:column;
+  visibility:hidden;opacity:0;transition:opacity .18s ease,visibility .18s ease}
+.pdfwrap.open{visibility:visible;opacity:1}
+.pdfbar{display:flex;align-items:center;gap:8px;background:var(--s-container);
+  border-bottom:1px solid var(--outline-variant);
+  padding:calc(8px + env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) 8px
+          max(8px,env(safe-area-inset-left,0px))}
+.pdfbar h2{margin:0;font-size:16px;line-height:22px;font-weight:500;flex:1 1 auto;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iconbtn{width:48px;height:48px;min-width:48px;border-radius:var(--r-full);display:inline-flex;
+  align-items:center;justify-content:center;cursor:pointer;color:var(--on-surface);text-decoration:none}
+.pdfbody{flex:1 1 auto;min-height:0;position:relative;background:var(--s-lowest)}
+.pdfbody iframe{width:100%;height:100%;border:0;display:block}
+.pdfnote{padding:10px max(12px,env(safe-area-inset-left,0px))
+         calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-right,0px));
+  background:var(--s-container);border-top:1px solid var(--outline-variant);
+  color:var(--on-surface-variant);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pdfnote a{color:var(--on-surface);text-underline-offset:3px}
+
 /* ── repeated + menus ────────────────────────── */
 .stack{display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-bottom:56px}
 .pair{background:var(--s-low);border-radius:var(--r-m);overflow:hidden}
@@ -376,6 +399,11 @@ footer{border-top:1px solid var(--outline-variant);padding-block:22px;margin-top
 
 <section id="v-manuals" role="tabpanel" aria-labelledby="t-manuals" hidden>
   <p class="note t-body-m" id="manhint"></p>
+  <div class="attach">
+    <p class="t-body-m" id="attachmsg"></p>
+    <input type="file" id="pickfiles" accept="application/pdf,.pdf" multiple hidden>
+    <button class="filled state" id="attachbtn" type="button">Attach the manual PDFs</button>
+  </div>
   <div class="shelf" id="shelf"></div>
 </section>
 
@@ -397,6 +425,16 @@ footer{border-top:1px solid var(--outline-variant);padding-block:22px;margin-top
 
 <footer class="t-body-m" id="foot"></footer>
 </main>
+
+<div class="pdfwrap" id="pdfwrap" role="dialog" aria-modal="true" aria-labelledby="pdftitle">
+  <div class="pdfbar">
+    <button class="iconbtn state" id="pdfclose" type="button" aria-label="Close the manual"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+    <h2 id="pdftitle"></h2>
+    <a class="iconbtn state" id="pdftab" target="_blank" rel="noopener" aria-label="Open in a new tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+  <div class="pdfbody" id="pdfbody"></div>
+  <p class="pdfnote t-body-s" id="pdfnote"></p>
+</div>
 
 <nav class="navbar" role="tablist" aria-label="Sections">
   <button class="dest state" data-dest="index" aria-selected="true">
@@ -536,7 +574,10 @@ function closeSheet(){
   document.body.classList.remove("locked");
 }
 document.getElementById("back").onclick = closeSheet;
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (pdfOpen()) closePdf(); else closeSheet();
+});
 
 function drawRead(){
   const el = document.getElementById("read"), f = byid[S.pick];
@@ -578,7 +619,8 @@ function drawRead(){
     ${f.note ? `<div class="callout t-body-m">${esc(f.note)}</div>` : ""}
     ${(f.man||[]).length ? `<div class="sect"><div class="secthead"><span class="t-title-s">Documented in</span></div>
       <div class="links">${f.man.filter(i => byman[i]).map(i =>
-        `<button class="state" data-man="${i}">${esc(byman[i].title)} · ${byman[i].pages}pp</button>`).join("")}</div></div>` : ""}
+        `<button class="state" data-pdf="${i}">${esc(byman[i].title)} · ${byman[i].pages}pp</button>
+         <button class="state" data-man="${i}">What it covers</button>`).join("")}</div></div>` : ""}
     ${kin.length ? `<div class="sect"><div class="secthead"><span class="t-title-s">Nearby</span></div>
       <div class="links">${kin.map(o => `<button class="state" data-id="${o.id}">${esc(o.name)}</button>`).join("")}</div></div>` : ""}`;
   link(el);
@@ -589,6 +631,7 @@ function link(el){
     go("index"); pickOne(b.dataset.id);
     if (!phone()) document.querySelector('.item[aria-current="true"]')?.scrollIntoView({block:"center"});
   });
+  el.querySelectorAll("[data-pdf]").forEach(b => b.onclick = () => openPdf(b.dataset.pdf));
   el.querySelectorAll("[data-man]").forEach(b => b.onclick = () => {
     closeSheet(); go("manuals"); S.vol = b.dataset.man; drawShelf();
     document.querySelector(`.vol[data-v="${S.vol}"]`)?.scrollIntoView({block:"center"});
@@ -596,9 +639,85 @@ function link(el){
 }
 
 /* manuals ---------------------------------------------- */
-document.getElementById("manhint").textContent = LOCAL
-  ? "Nineteen manuals, 387 pages. This copy sits in the same folder as the files, so Open the PDF works."
-  : "Nineteen manuals, 387 pages, every step folded into the capabilities. The PDFs are Contineo’s and are not served from this site — open your own copy.";
+document.getElementById("manhint").textContent =
+  "Nineteen manuals, 387 pages, every step folded into the capabilities below.";
+
+/* the PDFs themselves ----------------------------------- */
+const FILES = new Map();                 /* normalised filename -> File        */
+const BLOBS = new Map();                 /* manual id          -> object URL   */
+const norm = s => String(s).toLowerCase().replace(/\.pdf$/, "")
+  .replace(/\(\d+\)$/, "").replace(/[^a-z0-9]/g, "");
+let wanted = null;
+
+function manUrl(m){
+  if (BLOBS.has(m.id)) return BLOBS.get(m.id);
+  const f = FILES.get(norm(m.file));
+  if (f){ const u = URL.createObjectURL(f); BLOBS.set(m.id, u); return u; }
+  return LOCAL ? encodeURIComponent(m.file) : null;
+}
+const nAttached = () => M.filter(m => BLOBS.has(m.id) || FILES.has(norm(m.file))).length;
+
+function drawAttach(){
+  const n = nAttached();
+  const msg = document.getElementById("attachmsg");
+  const btn = document.getElementById("attachbtn");
+  if (n){
+    msg.textContent = n + " of " + M.length + " manuals attached — they open here. "
+      + "Nothing was uploaded; the files never leave this browser, and the attachment clears on reload.";
+    btn.textContent = n < M.length ? "Attach the rest" : "Attach more";
+  } else if (LOCAL){
+    msg.textContent = "This copy sits in the same folder as the PDFs, so every manual opens straight away.";
+    btn.textContent = "Attach PDFs from elsewhere";
+  } else {
+    msg.textContent = "The manuals are Contineo’s and are not served from this site. "
+      + "Point this page at your own copies once — select all nineteen, or drop the folder here — "
+      + "and every manual opens inside the page. Nothing is uploaded.";
+    btn.textContent = "Attach the manual PDFs";
+  }
+}
+
+function openPdf(id){
+  const m = byman[id];
+  if (!m) return;
+  const url = manUrl(m);
+  if (!url){ wanted = id; go("manuals"); drawAttach();
+    document.getElementById("pickfiles").click(); return; }
+  closeSheet();
+  document.getElementById("pdftitle").textContent = m.title;
+  document.getElementById("pdftab").href = url;
+  document.getElementById("pdfbody").innerHTML =
+    '<iframe src="' + url + '#view=FitH" title="' + esc(m.title) + '"></iframe>';
+  document.getElementById("pdfnote").innerHTML =
+    esc(m.file) + " · " + m.pages + " pages. Nothing showing? "
+    + '<a href="' + url + '" target="_blank" rel="noopener">Open it in a new tab</a>.';
+  document.getElementById("pdfwrap").classList.add("open");
+  document.body.classList.add("locked");
+  document.getElementById("pdfclose").focus();
+}
+function closePdf(){
+  document.getElementById("pdfwrap").classList.remove("open");
+  document.getElementById("pdfbody").innerHTML = "";
+  if (!document.getElementById("sheet").classList.contains("open"))
+    document.body.classList.remove("locked");
+}
+const pdfOpen = () => document.getElementById("pdfwrap").classList.contains("open");
+document.getElementById("pdfclose").onclick = closePdf;
+
+function take(list){
+  for (const f of list) if (/\.pdf$/i.test(f.name)) FILES.set(norm(f.name), f);
+  drawAttach(); drawShelf(); drawRead();
+  if (wanted){ const id = wanted; wanted = null;
+    if (manUrl(byman[id])) openPdf(id); }
+}
+document.getElementById("attachbtn").onclick = () => document.getElementById("pickfiles").click();
+document.getElementById("pickfiles").addEventListener("change", e => {
+  take(e.target.files); e.target.value = "";
+});
+const drop = document.getElementById("v-manuals");
+["dragenter","dragover"].forEach(n => drop.addEventListener(n, e => {
+  e.preventDefault(); e.dataTransfer.dropEffect = "copy";
+}));
+drop.addEventListener("drop", e => { e.preventDefault(); take(e.dataTransfer.files); });
 
 function drawShelf(){
   document.getElementById("shelf").innerHTML = M.map(m => {
@@ -614,8 +733,8 @@ function drawShelf(){
         <div class="links">${m.covers.filter(i => byid[i]).map(i =>
           `<button class="state" data-id="${i}">${esc(byid[i].name)}</button>`).join("")}</div></div>` : ""}
       <div class="acts">
-        ${LOCAL ? `<a class="filled state" href="${encodeURIComponent(m.file)}" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>Open the PDF</a>` : ""}
+        <button class="filled state" type="button" data-pdf="${m.id}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>Open the PDF</button>
         <button class="tonal state" data-v="${m.id}">${open ? "Hide" : "What it covers"}</button>
       </div>
     </article>`;
@@ -700,7 +819,7 @@ document.addEventListener("keydown", e => {
   document.querySelector('.item[aria-current="true"]')?.scrollIntoView({block:"nearest"});
 });
 
-drawIndex(); drawRead(); drawShelf();
+drawIndex(); drawRead(); drawShelf(); drawAttach();
 </script>
 </body>
 </html>
